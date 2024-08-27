@@ -26,7 +26,8 @@ module registers #(
     assign result_2 = data[read_register_2];
     
     always_ff @(posedge clk) if (!rst) begin
-        data[write_register] <= write_data;
+        if (write_register != 0)
+            data[write_register] <= write_data;
     end
 
 endmodule
