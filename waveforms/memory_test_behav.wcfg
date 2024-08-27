@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="memory_test_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="memory_test" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="129.230 ns"></ZoomStartTime>
+      <ZoomEndTime time="241.431 ns"></ZoomEndTime>
+      <Cursor1Time time="130.030 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="163"></NameColumnWidth>
+      <ValueColumnWidth column_width="61"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="9" />
+   <wvobject type="logic" fp_name="/memory_test/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/memory_test/rst">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/memory_test/instruction_addr">
+      <obj_property name="ElementShortName">instruction_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/memory_test/instruction_data">
+      <obj_property name="ElementShortName">instruction_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/memory_test/fetch_addr">
+      <obj_property name="ElementShortName">fetch_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fetch_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/memory_test/fetched_data">
+      <obj_property name="ElementShortName">fetched_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fetched_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/memory_test/write_addr">
+      <obj_property name="ElementShortName">write_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/memory_test/bytes_to_write">
+      <obj_property name="ElementShortName">bytes_to_write[3:0]</obj_property>
+      <obj_property name="ObjectShortName">bytes_to_write[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/memory_test/write_data">
+      <obj_property name="ElementShortName">write_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_data[31:0]</obj_property>
+   </wvobject>
+</wave_config>

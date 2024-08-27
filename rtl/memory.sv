@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module memory #(
-    parameter ADDR_WIDTH = 32, DATA_WIDTH = 32, MEM_BYTE_SIZE = 64'h10000,
+    parameter ADDR_WIDTH = 32, DATA_WIDTH = 32, MEM_BYTE_SIZE = 64'h1000,
     localparam DATA_BYTE_SIZE = DATA_WIDTH / 8,
     localparam DATA_INDEXING_WIDTH = $clog2(DATA_BYTE_SIZE)
 ) (
@@ -36,8 +36,8 @@ module memory #(
     
     always_comb begin
         for (logic [DATA_BYTE_SIZE - 1:0] i = 0; i < DATA_BYTE_SIZE; i++) begin
-            instruction_data[8 * i +:8] = data[instruction_addr * i];
-            fetched_data[8 * i +:8] = data[fetch_addr * i];
+            instruction_data[8 * i +:8] = data[instruction_addr + i];
+            fetched_data[8 * i +:8] = data[fetch_addr + i];
         end
     end
 
