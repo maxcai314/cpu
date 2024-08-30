@@ -3,7 +3,8 @@
 module registers #(
     parameter DATA_WIDTH = 32,
     parameter NUM_REGISTERS = 32,
-    localparam REGISTER_INDEXING_WIDTH = $clog2(NUM_REGISTERS)
+    localparam REGISTER_INDEXING_WIDTH = $clog2(NUM_REGISTERS),
+    localparam bit [DATA_WIDTH - 1:0] ZERO = '0
 ) (
     input logic clk,
     input logic rst,
@@ -20,7 +21,7 @@ module registers #(
 
     logic [DATA_WIDTH - 1:0] data [NUM_REGISTERS];
     
-    assign data[0] = 0; // zero register
+    assign data[0] = ZERO; // zero register
     
     assign result_1 = data[read_register_1];
     assign result_2 = data[read_register_2];
