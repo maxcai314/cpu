@@ -105,6 +105,22 @@ module memory_test(
         write_data = 32'haabb_ccdd;
         // should read 0xbbcc_dd00
  
+        @(posedge clk)
+        @(posedge clk)
+        @(posedge clk)
+        
+        // load in test image
+        bytes_to_write = 3'd0;
+        instruction_addr = 32'h0000; // should read 0xdead_beef
+        fetch_addr = 32'h0004; // should read 0xaabb_ccdd
+        rst = '1;
+        $readmemh("test_image.mem", memory.data);
+        @(posedge clk)
+        rst = '0;
+        @(posedge clk)
+        fetch_addr = 32'h0008; // should read 0xffff_ffff
+        @(posedge clk)
+        fetch_addr = 32'h000c; // should read 0x0000_0000
     end
     
 endmodule
