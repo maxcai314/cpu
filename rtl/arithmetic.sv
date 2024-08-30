@@ -30,6 +30,8 @@ module arithmetic #(
             { 3'h5, 7'h20 } : result = $signed(lhs) >>> rhs;
             { 3'h2, 7'h00 } : result = ($signed(lhs) < $signed(rhs)) ? ONE : ZERO;
             { 3'h3, 7'h00 } : result = (lhs < rhs) ? ONE : ZERO;
+            
+            default : $error("invalid arithmetic instruction");
         endcase
     end
     
