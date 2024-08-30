@@ -32,7 +32,7 @@ module arithmetic #(
             { 3'h2, 7'h00 } : begin result = ($signed(lhs) < $signed(rhs)) ? ONE : ZERO; valid = '1; end
             { 3'h3, 7'h00 } : begin result = (lhs < rhs) ? ONE : ZERO; valid = '1; end
             
-            default : begin result = 'X; valid = '0; $error("invalid arithmetic instruction"); end
+            default : begin result = 'X; valid = '0; end
         endcase
     end
     
