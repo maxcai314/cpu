@@ -2,7 +2,7 @@
 
 module registers #(
     parameter DATA_WIDTH = 32,
-    parameter NUM_REGISTERS = 32,
+    localparam NUM_REGISTERS = 32,
     localparam REGISTER_INDEXING_WIDTH = $clog2(NUM_REGISTERS)
 ) (
     input logic clk,
@@ -24,6 +24,11 @@ module registers #(
     
     assign result_1 = data[read_register_1];
     assign result_2 = data[read_register_2];
+    
+    always_ff @(posedge clk) if (rst) begin
+        for (int i = 1; i < NUM_REGISTERS; i++)
+            data[i] <= DATA_WIDTH'(0); // reset registers
+    end
     
     always_ff @(posedge clk) if (!rst) begin
         if (write_register != 0)
