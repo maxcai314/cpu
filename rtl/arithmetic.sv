@@ -1,9 +1,7 @@
 `timescale 1ns / 1ps
 
 module arithmetic #(
-    parameter DATA_WIDTH = 32,
-    localparam bit [DATA_WIDTH - 1:0] ZERO = '0,
-    localparam bit [DATA_WIDTH - 1:0] ONE = '1
+    parameter DATA_WIDTH = 32
 )(
     input logic clk,
     input logic rst,
@@ -29,8 +27,8 @@ module arithmetic #(
             { 3'h1, 7'h00 } : begin result = lhs << rhs; valid = '1; end
             { 3'h5, 7'h00 } : begin result = lhs >> rhs; valid = '1; end
             { 3'h5, 7'h20 } : begin result = $signed(lhs) >>> rhs; valid = '1; end
-            { 3'h2, 7'h00 } : begin result = ($signed(lhs) < $signed(rhs)) ? ONE : ZERO; valid = '1; end
-            { 3'h3, 7'h00 } : begin result = (lhs < rhs) ? ONE : ZERO; valid = '1; end
+            { 3'h2, 7'h00 } : begin result = ($signed(lhs) < $signed(rhs)) ? DATA_WIDTH'(1) : DATA_WIDTH'(0); valid = '1; end
+            { 3'h3, 7'h00 } : begin result = (lhs < rhs) ? DATA_WIDTH'(1) : DATA_WIDTH'(0); valid = '1; end
             
             default : begin result = 'X; valid = '0; end
         endcase
