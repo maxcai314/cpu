@@ -69,14 +69,14 @@ module decoder #(
     assign j_type = immediate_jump;
     
     assign funct_7_valid = r_type;
-    assign funct_e_valid = r_type || i_type || s_type || b_type;
+    assign funct_3_valid = r_type || i_type || s_type || b_type;
     
     assign register_1 = instruction_data[19:15];
     assign register_2 = instruction_data[24:20];
     assign write_register = instruction_data[11:7];
     
-    assign register_1_valid = r_type || i_type || s_type || b_type;
-    assign register_2_valid = r_type || s_type || b_type;
+    assign register_1_valid     = r_type || i_type || s_type || b_type;
+    assign register_2_valid     = r_type || s_type || b_type;
     assign write_register_valid = r_type || i_type || u_type || j_type;
     
     always_comb begin
