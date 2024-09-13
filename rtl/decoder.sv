@@ -36,7 +36,7 @@ module decoder #(
     output logic [31:25] funct_7,
     output logic funct_7_valid,
     
-    output logic [14:2] funct_3,
+    output logic [14:12] funct_3,
     output logic funct_3_valid
 );
 
@@ -67,6 +67,9 @@ module decoder #(
     assign b_type = branch;
     assign u_type = load_upper || load_upper_pc;
     assign j_type = immediate_jump;
+    
+    assign funct_7[31:25] = instruction_data[31:25];
+    assign funct_3[14:12] = instruction_data[14:12];
     
     assign funct_7_valid = r_type;
     assign funct_3_valid = r_type || i_type || s_type || b_type;
