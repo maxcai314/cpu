@@ -28,14 +28,14 @@ module memory #(
     end
     
     always_ff @(posedge clk) if (!rst) begin
-        for (int i = 0; i < DATA_BYTE_SIZE; i++) begin
+        for (int unsigned i = 0; i < DATA_BYTE_SIZE; i++) begin
             if (i < bytes_to_write)
                 data[write_addr + i] <= write_data[8 * i +:8];
         end
     end
     
     always_comb begin
-        for (int i = 0; i < DATA_BYTE_SIZE; i++) begin
+        for (int unsigned i = 0; i < DATA_BYTE_SIZE; i++) begin
             instruction_data[8 * i +:8] = data[instruction_addr + i];
             fetched_data[8 * i +:8] = data[fetch_addr + i];
         end
