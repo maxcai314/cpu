@@ -68,10 +68,13 @@ module decoder #(
     assign u_type = load_upper || load_upper_pc;
     assign j_type = immediate_jump;
     
-    assign funct_7[31:25] = instruction_data[31:25];
+    logic override_funct_7; // funct_7 is implicitly zero for immediate arithmetic
+    assign override_funct_7 = immediate_arith && funct_3 != 3'h1 && funct_3 != 3'h5;
+    
+    assign funct_7[31:25] = override_funct_7 ? '0 : instruction_data[31:25];
     assign funct_3[14:12] = instruction_data[14:12];
     
-    assign funct_7_valid = r_type;
+    assign funct_7_valid = r_type || immediate_arith;
     assign funct_3_valid = r_type || i_type || s_type || b_type;
     
     assign register_1 = instruction_data[19:15];

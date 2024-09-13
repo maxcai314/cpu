@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="decoder_test_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="decoder_test" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="30.610 ns"></ZoomStartTime>
+      <ZoomEndTime time="119.611 ns"></ZoomEndTime>
+      <Cursor1Time time="39.810 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="163"></NameColumnWidth>
+      <ValueColumnWidth column_width="61"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="26" />
+   <wvobject type="logic" fp_name="/decoder_test/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/rst">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/decoder_test/instruction_data">
+      <obj_property name="ElementShortName">instruction_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/register_arith">
+      <obj_property name="ElementShortName">register_arith</obj_property>
+      <obj_property name="ObjectShortName">register_arith</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/immediate_arith">
+      <obj_property name="ElementShortName">immediate_arith</obj_property>
+      <obj_property name="ObjectShortName">immediate_arith</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/load">
+      <obj_property name="ElementShortName">load</obj_property>
+      <obj_property name="ObjectShortName">load</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/store">
+      <obj_property name="ElementShortName">store</obj_property>
+      <obj_property name="ObjectShortName">store</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/branch">
+      <obj_property name="ElementShortName">branch</obj_property>
+      <obj_property name="ObjectShortName">branch</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/immediate_jump">
+      <obj_property name="ElementShortName">immediate_jump</obj_property>
+      <obj_property name="ObjectShortName">immediate_jump</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/register_jump">
+      <obj_property name="ElementShortName">register_jump</obj_property>
+      <obj_property name="ObjectShortName">register_jump</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/load_upper">
+      <obj_property name="ElementShortName">load_upper</obj_property>
+      <obj_property name="ObjectShortName">load_upper</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/load_upper_pc">
+      <obj_property name="ElementShortName">load_upper_pc</obj_property>
+      <obj_property name="ObjectShortName">load_upper_pc</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/environment">
+      <obj_property name="ElementShortName">environment</obj_property>
+      <obj_property name="ObjectShortName">environment</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/opcode_valid">
+      <obj_property name="ElementShortName">opcode_valid</obj_property>
+      <obj_property name="ObjectShortName">opcode_valid</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/decoder_test/immediate_data">
+      <obj_property name="ElementShortName">immediate_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">immediate_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/immediate_valid">
+      <obj_property name="ElementShortName">immediate_valid</obj_property>
+      <obj_property name="ObjectShortName">immediate_valid</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/decoder_test/register_1">
+      <obj_property name="ElementShortName">register_1[19:15]</obj_property>
+      <obj_property name="ObjectShortName">register_1[19:15]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/register_1_valid">
+      <obj_property name="ElementShortName">register_1_valid</obj_property>
+      <obj_property name="ObjectShortName">register_1_valid</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/decoder_test/register_2">
+      <obj_property name="ElementShortName">register_2[24:20]</obj_property>
+      <obj_property name="ObjectShortName">register_2[24:20]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/register_2_valid">
+      <obj_property name="ElementShortName">register_2_valid</obj_property>
+      <obj_property name="ObjectShortName">register_2_valid</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/decoder_test/write_register">
+      <obj_property name="ElementShortName">write_register[11:7]</obj_property>
+      <obj_property name="ObjectShortName">write_register[11:7]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/write_register_valid">
+      <obj_property name="ElementShortName">write_register_valid</obj_property>
+      <obj_property name="ObjectShortName">write_register_valid</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/decoder_test/funct_7">
+      <obj_property name="ElementShortName">funct_7[31:25]</obj_property>
+      <obj_property name="ObjectShortName">funct_7[31:25]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/funct_7_valid">
+      <obj_property name="ElementShortName">funct_7_valid</obj_property>
+      <obj_property name="ObjectShortName">funct_7_valid</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/decoder_test/funct_3">
+      <obj_property name="ElementShortName">funct_3[14:12]</obj_property>
+      <obj_property name="ObjectShortName">funct_3[14:12]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/decoder_test/funct_3_valid">
+      <obj_property name="ElementShortName">funct_3_valid</obj_property>
+      <obj_property name="ObjectShortName">funct_3_valid</obj_property>
+   </wvobject>
+</wave_config>
