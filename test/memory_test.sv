@@ -10,7 +10,7 @@ module memory_test(
     logic [31:0] instruction_addr;
     logic [31:0] fetch_addr;
     
-    logic [3:0] bytes_to_write; // zero for no-op
+    logic [2:0] bytes_to_write; // zero for no-op
     logic [31:0] write_addr;
     logic [31:0] write_data;
     
