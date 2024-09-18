@@ -68,10 +68,10 @@ module decoder #(
     assign u_type = load_upper || load_upper_pc;
     assign j_type = immediate_jump;
     
-    logic override_funct_7; // funct_7 is implicitly zero for immediate arithmetic
-    assign override_funct_7 = immediate_arith && funct_3 != 3'h1 && funct_3 != 3'h5;
+    logic override_immediate_arith; // funct_7 exists, special case for immediate arithmetic
+    assign override_immediate_arith = funct_3 == 3'h1 || funct_3 == 3'h5;
     
-    assign funct_7[31:25] = override_funct_7 ? '0 : instruction_data[31:25];
+    assign funct_7[31:25] = (immediate_arith && !override_immediate_arith) ? '0 : instruction_data[31:25];
     assign funct_3[14:12] = instruction_data[14:12];
     
     assign funct_7_valid = r_type || immediate_arith;
@@ -91,8 +91,13 @@ module decoder #(
             immediate_valid = '0;
             opcode_valid = '1;
         end else if (i_type) begin
-            immediate_data[11:0] = instruction_data[31:20];
-            immediate_data[IMMEDIATE_WIDTH - 1:12] = '0;
+            if (immediate_arith && override_immediate_arith) begin
+                immediate_data[4:0] = instruction_data[24:20];
+                immediate_data[IMMEDIATE_WIDTH - 1:25] = '0;
+            end else begin
+                immediate_data[11:0] = instruction_data[31:20];
+                immediate_data[IMMEDIATE_WIDTH - 1:12] = '0;
+            end
             immediate_valid = '1;
             opcode_valid = '1;
         end else if (s_type) begin

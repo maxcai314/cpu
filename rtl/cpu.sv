@@ -141,6 +141,7 @@ module cpu(
     logic [31:0] working_address;
     assign working_address = register_result_1 + immediate_data; // for both load and store
     assign fetch_addr = working_address; // for now, until we need to worry about constantly fetching
+    assign write_addr = working_address; // for now, until we need to worry about constantly writing 0 bytes
     
     assign lhs = register_result_1;
     assign rhs = immediate_arith ? immediate_data : register_result_2;

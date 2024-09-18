@@ -2,3 +2,21 @@
     13 05 f0 00 // addi a0, x0, 15
     93 05 80 00 // addi a1, x0, 8
     33 06 b5 00 // add a2, a0, a1
+    13 00 00 00 // addi x0, x0, 0   ; (nop)
+    13 05 00 10 // addi a0, x0, 256 ; address
+    03 26 05 00 // lw a2, (a0)      ; load 0xdead_beef
+    83 15 05 00 // lh a1, 0(a0)     ; load 0xffff_beef
+    03 55 25 00 // lhu a0, 2(a0)    ; load 0x0000_dead
+    93 95 05 01 // slli a1, a1, 16  ; shift into 0xbeef_0000
+    13 56 06 41 // srai a2, a2, 16  ; shift into 0xffff_dead
+    03 25 40 10 // lw a0, 260(x0)   ; load 0x0000_0000
+    23 22 b0 10 // sw a1, 260(x0)   ; store 0xbeef_0000
+    03 25 40 10 // lw a0, 260(x0)   ; load 0xbeef_0000
+    23 12 c0 10 // sh a2, 260(x0)   ; store 0xdead
+    03 25 40 10 // lw a0, 260(x0)   ; load 0xbeef_dead
+
+
+@00000100
+    ef be ad de // 0xdead_beef
+    00 00 00 00 // 0x0000_0000
+    44 33 22 11 // 0x1122_3344
