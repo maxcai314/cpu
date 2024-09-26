@@ -178,7 +178,9 @@ module cpu(
         end
     end
     
+    logic [31:0] next_instruction;
     logic progress_ready;
+    assign next_instruction = program_count + 32'h0000_0004;
     
     always_ff @(posedge clk) if (rst) begin
         progress_ready <= '0;
@@ -186,10 +188,8 @@ module cpu(
     end
     
     always_ff @(posedge clk) if (!rst) begin
-        
-        
         if (progress_ready)
-            program_count <= program_count + 32'h0000_0004;
+            program_count <= next_instruction; // todo: add branching
         else
             progress_ready <= '1;
     end
