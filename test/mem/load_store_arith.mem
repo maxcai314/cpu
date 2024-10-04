@@ -25,9 +25,50 @@
     93 07 40 00 // addi a5, a0, 4   ; a5 = 4
     e3 d6 e7 fe // bge a5, a4, -20  ; if a5 >= a4, go back 5
     93 05 05 00 // addi a1, a0, 0   ; a1 = a0 = 5
-
+    13 00 00 00 // addi x0, x0, 0   ; (nop)
+    13 00 00 00 // addi x0, x0, 0   ; (nop)
+    e7 00 00 20 // jalr x1, 512(x0) ; call function using global address 0x0000200
+    13 05 00 00 // addi a0, x0, 0   ; a0 = 0
+    93 05 00 00 // addi a1, x0, 0   ; a1 = 0
+    13 06 00 00 // addi a2, x0, 0   ; a2 = 0
+    
 
 @00000100
     ef be ad de // 0xdead_beef
     00 00 00 00 // 0x0000_0000
     44 33 22 11 // 0x1122_3344
+
+
+@00000200
+    13 05 10 00 // addi a0, x0, 1 ; fib = 1
+    93 05 00 00 // addi a1, x0, 0 ; prev = 0
+    13 06 00 00 // addi a2, x0, 0 ; num_evens = 0
+    
+    // start of loop
+    93 07 05 00 // addi a5, a0, 0 ; a5 = fibonacci
+    93 f7 17 00 // andi a5, a5, 1 ; a5 &= 0x1
+    63 98 07 00 // bne a5, x0, 16 ; if a5 != 0, skip 4 (don't increment num_evens)
+    93 07 06 00 // addi a5, a2, 0 ; a5 = num_evens
+    93 87 17 00 // addi a5, a5, 1 ; a5 = a5 + 1
+    13 86 07 00 // addi a2, a5, 0 ; num_evens = a5
+    
+    93 07 05 00 // addi a5, a0, 0 ; a5 = fib
+    93 86 07 00 // addi a3, a5, 0 ; temp = a5
+    13 07 05 00 // addi a4, a0, 0 ; a4 = fib
+    93 87 05 00 // addi a5, a1, 0 ; a5 = prev
+    b3 07 f7 00 // add a5, a4, a5 ; a5 = a4 + a5
+    13 85 07 00 // addi a0, a5, 0 ; fib = a5
+    93 87 06 00 // addi a5, a3, 0 ; a5 = temp
+    93 85 07 00 // addi a1, a5, 0 ; prev = a5
+    
+    13 07 06 00 // addi a4, a2, 0  ; a4 = num_evens
+    93 07 30 06 // addi a5, x0, 99 ; a5 = 99
+    63 c6 e7 00 // blt a5, a4, 8   ; if a5 < a4, skip 2 (break loop)
+    6f f0 df fb // jal x0, -68     ; go to start of loop
+    
+    // end of loop
+    13 00 00 00 // addi x0, x0, 0  ; (nop inserted by compiler)
+    67 80 00 00 // jalr x0, 0(x1)  ; return
+
+    
+    
