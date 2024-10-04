@@ -170,28 +170,42 @@ module cpu(
     assign bytes_to_write = store ? bytes_to_store : 3'h0;
     assign write_data = register_result_2;
     
-    always_comb begin
-        if (register_arith || immediate_arith) begin
-            write_register_data <= arithmetic_result;
-        end else if (load) begin
-            write_register_data <= load_data;
-        end
-    end
-    
     logic [31:0] next_instruction;
-    logic progress_ready;
-    assign next_instruction = program_count + 32'h0000_0004;
+    logic branch_operation_valid;
     
-    always_ff @(posedge clk) if (rst) begin
-        progress_ready <= '0;
-        program_count <= 32'h0000_0000;
-    end
+    count count (
+        .clk ( clk ),
+        .rst ( rst ),
+        
+        .lhs ( register_result_1 ),
+        .rhs ( register_result_2 ),
+        .operation ( funct_3 ),
+        
+        .immediate_offset ( immediate_data ),
+        .register_address ( register_result_1 ),
+        
+        .branch ( branch ),
+        .immediate_jump ( immediate_jump ),
+        .register_jump ( register_jump ),
+        
+        .program_count ( program_count ),
+        .next_instruction ( next_instruction ),
+        .operation_valid ( branch_operation_valid )
+    );
     
-    always_ff @(posedge clk) if (!rst) begin
-        if (progress_ready)
-            program_count <= next_instruction; // todo: add branching
+    always_comb begin
+        if (register_arith || immediate_arith)
+            write_register_data = arithmetic_result;
+        else if (load)
+            write_register_data = load_data;
+        else if (immediate_jump || register_jump)
+            write_register_data = next_instruction;
+        else if (load_upper)
+            write_register_data = immediate_data;
+        else if (load_upper_pc)
+            write_register_data = program_count + immediate_data; // todo: use alu
         else
-            progress_ready <= '1;
+            write_register_data = 'X;
     end
 
 endmodule
