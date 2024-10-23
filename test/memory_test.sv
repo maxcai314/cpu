@@ -68,8 +68,12 @@ module memory_test(
         write_data_valid = '1;
         bytes_to_write = 3'd4;
         
-        @(posedge clk)
+        do begin
+            @(posedge clk);
+        end while (!write_done);
         assert(write_done);
+        @(posedge clk)
+        
         assert(instruction_data == 32'hffff_ffff);
         
         // incrementally clear bytes
@@ -83,17 +87,31 @@ module memory_test(
         // clear lower byte
         bytes_to_write = 3'd1;
         write_data_valid = '1;
-        @(posedge clk)
+        
+        do begin
+            @(posedge clk);
+        end while (!write_done);
         assert(write_done);
+        @(posedge clk)
+        
         assert(instruction_data == 32'hffff_ff00);
         // clear lower half
         bytes_to_write = 3'd2;
+        
+        do begin
+            @(posedge clk);
+        end while (!write_done);
         @(posedge clk)
+        
         assert(instruction_data == 32'hffff_0000);
         // clear word
         bytes_to_write = 3'd4;
         
+        do begin
+            @(posedge clk);
+        end while (!write_done);
         @(posedge clk)
+
         assert(instruction_data == 32'h0000_0000);
         
         // write to next byte
@@ -101,7 +119,11 @@ module memory_test(
         write_data = 32'hdead_beef;
         bytes_to_write = 3'd4;
         
+        do begin
+            @(posedge clk);
+        end while (!write_done);
         @(posedge clk)
+        
         assert(fetched_data == 32'hdead_beef);
         
         // overwrite lower half only
@@ -110,7 +132,11 @@ module memory_test(
         
         // should read 0xdead_cafe
         
+        do begin
+            @(posedge clk);
+        end while (!write_done);
         @(posedge clk)
+        
         assert(fetched_data == 32'hdead_cafe);
         @(posedge clk)
         @(posedge clk)
@@ -119,12 +145,21 @@ module memory_test(
         write_addr = 32'h0100;
         write_data = 32'h0000_0000;
         bytes_to_write = 3'd4;
+        
+        do begin
+            @(posedge clk);
+        end while (!write_done);
         @(posedge clk)
+        
         write_addr = 32'h0101;
         write_data = 32'haabb_ccdd;
         // should read 0xbbcc_dd00
  
+        do begin
+            @(posedge clk);
+        end while (!write_done);
         @(posedge clk)
+        
         assert(instruction_data == 32'hbbcc_dd00);
         @(posedge clk)
         @(posedge clk)

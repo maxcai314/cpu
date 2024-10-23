@@ -27,18 +27,28 @@ module memory #(
 
     logic [7:0] data [MEM_BYTE_SIZE];
     
+    logic write_timer; // simualtion: only write on every other cycle
+    
+    always_ff @(posedge clk) if (rst) begin
+        write_timer <= '1;
+    end
+    
+    always_ff @(posedge clk) if (!rst) begin
+        write_timer <= !write_timer;
+    end
+    
     // todo: use realistic memory; also see if fetch failed
     assign instruction_fetch_done = '1;
     assign fetch_done = '1;
-    assign write_done = write_data_valid; // todo: add delays
+    assign write_done = write_data_valid && write_timer; // whether or not the write will happen next cycle
     
     always_ff @(posedge clk) if (rst) begin
 //        for (logic [ADDR_WIDTH - 1:0] i=0; i<MEM_BYTE_SIZE; i++)
-//            data[i] = 8'h00;
+//            data[i] <= 8'h00;
 //         todo: initialize some instructions to run?
     end
         
-    always_ff @(posedge clk) if (!rst && write_data_valid) begin
+    always_ff @(posedge clk) if (!rst && write_done) begin
         for (int unsigned i = 0; i < DATA_BYTE_SIZE; i++) begin
             if (i < bytes_to_write)
                 data[write_addr + i] <= write_data[8 * i +:8];
