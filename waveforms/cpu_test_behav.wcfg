@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="30.150 ns"></ZoomStartTime>
-      <ZoomEndTime time="107.151 ns"></ZoomEndTime>
-      <Cursor1Time time="43.260 ns"></Cursor1Time>
+      <ZoomStartTime time="197.940 ns"></ZoomStartTime>
+      <ZoomEndTime time="288.141 ns"></ZoomEndTime>
+      <Cursor1Time time="0.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="156"></NameColumnWidth>
+      <NameColumnWidth column_width="152"></NameColumnWidth>
       <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="8" />
+   <WVObjectSize size="9" />
    <wvobject type="logic" fp_name="/cpu_test/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -39,6 +39,10 @@
    <wvobject type="array" fp_name="/cpu_test/cpu/immediate_data">
       <obj_property name="ElementShortName">immediate_data[31:0]</obj_property>
       <obj_property name="ObjectShortName">immediate_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/cpu_test/cpu/execution_done">
+      <obj_property name="ElementShortName">execution_done</obj_property>
+      <obj_property name="ObjectShortName">execution_done</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/cpu_test/cpu/registers/data[10]">
       <obj_property name="ElementShortName">[10][31:0]</obj_property>

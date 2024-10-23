@@ -7,6 +7,7 @@ module decoder_test(
     logic rst;
     
     logic [31:0] instruction_data;
+    logic instruction_data_valid;
     
     logic register_arith;
     logic immediate_arith;
@@ -43,6 +44,7 @@ module decoder_test(
         .rst ( rst ),
         
         .instruction_data ( instruction_data ),
+        .instruction_data_valid ( instruction_data_valid ),
         
         .register_arith ( register_arith ),
         .immediate_arith ( immediate_arith ),
@@ -92,6 +94,7 @@ module decoder_test(
         
         // addi x15, x0, 23
         instruction_data = 32'h0170_0793;
+        instruction_data_valid = '1;
         @(posedge clk)
         assert(!register_arith);
         assert(immediate_arith);
@@ -121,6 +124,29 @@ module decoder_test(
         
         assert(funct_7 == 7'h00); // add
         assert(funct_7_valid);
+        
+        // invalid
+        @(posedge clk)
+        instruction_data_valid = '0;
+        @(posedge clk)
+        assert(!opcode_valid);
+        assert(!register_arith);
+        assert(!immediate_arith);
+        assert(!load);
+        assert(!store);
+        assert(!branch);
+        assert(!immediate_jump);
+        assert(!register_jump);
+        assert(!load_upper);
+        assert(!load_upper_pc);
+        assert(!environment);
+        
+        assert(!funct_3_valid);
+        assert(!funct_7_valid);
+        
+        assert(!register_1_valid);
+        assert(!register_2_valid);
+        assert(!write_register_valid);
     end
     
 endmodule

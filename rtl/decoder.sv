@@ -8,6 +8,7 @@ module decoder #(
     input logic rst,
     
     input logic [INSTRUCTION_WIDTH - 1:0] instruction_data,
+    input logic instruction_data_valid,
     
     output logic register_arith,
     output logic immediate_arith,
@@ -43,16 +44,16 @@ module decoder #(
     logic [6:0] opcode;
     assign opcode = instruction_data[6:0];
     
-    assign register_arith  = opcode == 7'b0110011; // R
-    assign immediate_arith = opcode == 7'b0010011; // I
-    assign load            = opcode == 7'b0000011; // I
-    assign store           = opcode == 7'b0100011; // S
-    assign branch          = opcode == 7'b1100011; // B
-    assign immediate_jump  = opcode == 7'b1101111; // J
-    assign register_jump   = opcode == 7'b1100111; // I
-    assign load_upper      = opcode == 7'b0110111; // U
-    assign load_upper_pc   = opcode == 7'b0010111; // U
-    assign environment     = opcode == 7'b1110011; // I
+    assign register_arith  = instruction_data_valid && opcode == 7'b0110011; // R
+    assign immediate_arith = instruction_data_valid && opcode == 7'b0010011; // I
+    assign load            = instruction_data_valid && opcode == 7'b0000011; // I
+    assign store           = instruction_data_valid && opcode == 7'b0100011; // S
+    assign branch          = instruction_data_valid && opcode == 7'b1100011; // B
+    assign immediate_jump  = instruction_data_valid && opcode == 7'b1101111; // J
+    assign register_jump   = instruction_data_valid && opcode == 7'b1100111; // I
+    assign load_upper      = instruction_data_valid && opcode == 7'b0110111; // U
+    assign load_upper_pc   = instruction_data_valid && opcode == 7'b0010111; // U
+    assign environment     = instruction_data_valid && opcode == 7'b1110011; // I
     
     logic r_type;
     logic i_type;
@@ -86,7 +87,11 @@ module decoder #(
     assign write_register_valid = r_type || i_type || u_type || j_type;
     
     always_comb begin
-        if (r_type) begin
+        if (!instruction_data_valid) begin
+            immediate_data[IMMEDIATE_WIDTH - 1:0] = 'X;
+            immediate_valid = 'X;
+            opcode_valid = '0;
+        end else if (r_type) begin
             immediate_data = 'X;
             immediate_valid = '0;
             opcode_valid = '1;

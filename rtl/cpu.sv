@@ -7,6 +7,7 @@ module cpu(
 );
     logic [31:0] program_count;
     logic [31:0] instruction_data;
+    logic instruction_data_valid;
 
     logic register_arith;
     logic immediate_arith;
@@ -29,7 +30,7 @@ module cpu(
     logic [24:20] register_2;
     logic register_2_valid;
     
-    logic [11:7] decoded_write_register;
+    logic [11:7] write_register;
     logic write_register_valid;
     
     logic [31:25] funct_7;
@@ -43,6 +44,7 @@ module cpu(
         .rst ( rst ),
         
         .instruction_data ( instruction_data ),
+        .instruction_data_valid ( instruction_data_valid ),
         
         .register_arith ( register_arith ),
         .immediate_arith ( immediate_arith ),
@@ -65,7 +67,7 @@ module cpu(
         .register_2 ( register_2 ),
         .register_2_valid ( register_2_valid ),
         
-        .write_register ( decoded_write_register ),
+        .write_register ( write_register ),
         .write_register_valid ( write_register_valid ),
         
         .funct_7 ( funct_7 ),
@@ -78,8 +80,10 @@ module cpu(
     logic [31:0] register_result_1;
     logic [31:0] register_result_2;
     
-    logic [4:0] write_register;
     logic [31:0] write_register_data;
+    logic write_register_data_valid;
+    
+    logic register_write_valid;
     
     registers registers (
         .clk ( clk ),
@@ -92,7 +96,10 @@ module cpu(
         .result_2 ( register_result_2 ),
         
         .write_register ( write_register ),
-        .write_data ( write_register_data )
+        .write_data ( write_register_data ),
+        .write_data_valid ( write_register_data_valid ),
+        
+        .write_valid ( register_write_valid )
     );
     
     logic [31:0] fetch_addr;
@@ -100,8 +107,12 @@ module cpu(
     logic [2:0] bytes_to_write; // zero for no-op
     logic [31:0] write_addr;
     logic [31:0] write_data;
+    logic write_data_valid;
+    
+    logic write_done;
     
     logic [31:0] fetched_data;
+    logic fetch_done;
     
     memory memory (
         .clk ( clk ),
@@ -113,29 +124,43 @@ module cpu(
         .bytes_to_write ( bytes_to_write ),
         .write_addr ( write_addr ),
         .write_data ( write_data ),
+        .write_data_valid ( write_data_valid ),
+        .write_done ( write_done ),
         
         .instruction_data ( instruction_data ),
-        .fetched_data ( fetched_data )
+        .instruction_fetch_done ( instruction_data_valid ), // todo: implement in memory handler
+        
+        .fetched_data ( fetched_data ),
+        .fetch_done ( fetch_done )
     );
     
     logic [31:0] lhs;
+    logic lhs_valid;
+    
     logic [31:0] rhs;
+    logic rhs_valid;
     
     logic [31:0] arithmetic_result;
-    logic arithmetic_valid;
+    logic arithmetic_result_valid;
     
     arithmetic arithmetic (
         .clk ( clk ),
         .rst ( rst ),
         
         .lhs ( lhs ),
+        .lhs_valid ( lhs_valid ),
+        
         .rhs ( rhs ),
+        .rhs_valid ( rhs_valid ),
         
         .operation ( funct_3 ),
+        .operation_valid ( funct_3_valid ),
+        
         .metadata ( funct_7 ),
+        .metadata_valid ( funct_7_valid ),
         
         .result ( arithmetic_result ),
-        .valid ( arithmetic_valid )
+        .result_valid ( arithmetic_result_valid )
     );
     
     logic [31:0] working_address;
@@ -144,8 +169,10 @@ module cpu(
     assign write_addr = working_address; // for now, until we need to worry about constantly writing 0 bytes
     
     assign lhs = register_result_1;
+    assign lhs_valid = register_1_valid;
+    
     assign rhs = immediate_arith ? immediate_data : register_result_2;
-    assign write_register = write_register_valid ? decoded_write_register : 5'h0000_0000; // todo: wrong
+    assign rhs_valid = immediate_arith ? immediate_valid : register_2_valid;
     
     logic [31:0] load_data;
     always_comb unique case (funct_3)
@@ -158,54 +185,80 @@ module cpu(
         default : load_data = 'X;
     endcase
     
-    logic [2:0] bytes_to_store;
     always_comb unique case (funct_3)
-        3'h0 : bytes_to_store = 3'h1; // byte
-        3'h1 : bytes_to_store = 3'h2; // half
-        3'h2 : bytes_to_store = 3'h4; // word
+        3'h0 : bytes_to_write = 3'h1; // byte
+        3'h1 : bytes_to_write = 3'h2; // half
+        3'h2 : bytes_to_write = 3'h4; // word
         
-        default : bytes_to_store = 'X;
+        default : bytes_to_write = 'X;
     endcase
     
-    assign bytes_to_write = store ? bytes_to_store : 3'h0;
     assign write_data = register_result_2;
+    assign write_data_valid = store;
     
-    logic [31:0] next_instruction;
-    logic branch_operation_valid;
+    logic execution_done;
+    logic [31:0] next_instruction_addr;
     
     count count (
         .clk ( clk ),
         .rst ( rst ),
         
+        .execution_done ( execution_done ),
+        
         .lhs ( register_result_1 ),
+        .lhs_valid ( register_1_valid ),
+        
         .rhs ( register_result_2 ),
+        .rhs_valid ( register_2_valid ),
+        
         .operation ( funct_3 ),
+        .operation_valid ( funct_3_valid ),
         
         .immediate_offset ( immediate_data ),
+        .immediate_offset_valid ( immediate_valid ),
+        
         .register_address ( register_result_1 ),
+        .register_address_valid ( register_1_valid ),
         
         .branch ( branch ),
         .immediate_jump ( immediate_jump ),
         .register_jump ( register_jump ),
         
         .program_count ( program_count ),
-        .next_instruction ( next_instruction ),
-        .operation_valid ( branch_operation_valid )
+        .next_instruction ( next_instruction_addr )
     );
     
     always_comb begin
-        if (register_arith || immediate_arith)
+        if (write_register_valid) begin
+            execution_done = register_write_valid;
+        end else if (store) begin
+            execution_done = write_done;
+        end else begin
+            execution_done = opcode_valid;
+        end // todo: ecall?
+    end
+    
+    // create logic to figure out whether write data is valid by propagating
+    always_comb begin
+        if (register_arith || immediate_arith) begin
             write_register_data = arithmetic_result;
-        else if (load)
+            write_register_data_valid = arithmetic_result_valid;
+        end else if (load) begin
             write_register_data = load_data;
-        else if (immediate_jump || register_jump)
-            write_register_data = next_instruction;
-        else if (load_upper)
+            write_register_data_valid = fetch_done;
+        end else if (immediate_jump || register_jump) begin
+            write_register_data = next_instruction_addr;
+            write_register_data_valid = '1; // always true
+        end else if (load_upper) begin
             write_register_data = immediate_data;
-        else if (load_upper_pc)
-            write_register_data = program_count + immediate_data; // todo: use alu
-        else
+            write_register_data_valid = immediate_valid;
+        end else if (load_upper_pc) begin
+            write_register_data = program_count + immediate_data; // todo: use alu?
+            write_register_data_valid = '1;
+        end else begin
             write_register_data = 'X;
+            write_register_data_valid = '0;
+        end
     end
 
 endmodule

@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="112.201 ns"></ZoomEndTime>
+      <ZoomStartTime time="654.937 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,069.013 ns"></ZoomEndTime>
       <Cursor1Time time="1,000.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="163"></NameColumnWidth>
-      <ValueColumnWidth column_width="61"></ValueColumnWidth>
+      <NameColumnWidth column_width="160"></NameColumnWidth>
+      <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="8" />
+   <WVObjectSize size="10" />
    <wvobject type="logic" fp_name="/arithmetic_test/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -32,9 +32,17 @@
       <obj_property name="ElementShortName">lhs[31:0]</obj_property>
       <obj_property name="ObjectShortName">lhs[31:0]</obj_property>
    </wvobject>
+   <wvobject type="logic" fp_name="/arithmetic_test/lhs_valid">
+      <obj_property name="ElementShortName">lhs_valid</obj_property>
+      <obj_property name="ObjectShortName">lhs_valid</obj_property>
+   </wvobject>
    <wvobject type="array" fp_name="/arithmetic_test/rhs">
       <obj_property name="ElementShortName">rhs[31:0]</obj_property>
       <obj_property name="ObjectShortName">rhs[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/arithmetic_test/rhs_valid">
+      <obj_property name="ElementShortName">rhs_valid</obj_property>
+      <obj_property name="ObjectShortName">rhs_valid</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/arithmetic_test/operation">
       <obj_property name="ElementShortName">operation[14:12]</obj_property>
@@ -48,8 +56,8 @@
       <obj_property name="ElementShortName">result[31:0]</obj_property>
       <obj_property name="ObjectShortName">result[31:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/arithmetic_test/valid">
-      <obj_property name="ElementShortName">valid</obj_property>
-      <obj_property name="ObjectShortName">valid</obj_property>
+   <wvobject type="logic" fp_name="/arithmetic_test/result_valid">
+      <obj_property name="ElementShortName">result_valid</obj_property>
+      <obj_property name="ObjectShortName">result_valid</obj_property>
    </wvobject>
 </wave_config>

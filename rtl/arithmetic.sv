@@ -7,14 +7,21 @@ module arithmetic #(
     input logic rst,
     
     input logic [DATA_WIDTH - 1:0] lhs, // rs1 value
+    input logic lhs_valid,
+    
     input logic [DATA_WIDTH - 1:0] rhs, // rs2 value or decoded immediate
+    input logic rhs_valid,
     
     input logic [14:12] operation, // funct3
+    input logic operation_valid,
+    
     input logic [31:25] metadata, // funct7, or imm[11:5] if applicable (otherwise zero)
+    input logic metadata_valid,
     
     output logic [DATA_WIDTH -1:0] result,
-    output logic valid
+    output logic result_valid
 );
+    logic valid; // whether the oepration itself is valid
     
     always_comb begin
         unique case ({operation, metadata})
@@ -33,5 +40,7 @@ module arithmetic #(
             default : begin result = 'X; valid = '0; end
         endcase
     end
+    
+    assign result_valid = valid && rhs_valid && lhs_valid && operation_valid && metadata_valid;
     
 endmodule

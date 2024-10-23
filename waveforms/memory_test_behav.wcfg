@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="129.230 ns"></ZoomStartTime>
-      <ZoomEndTime time="241.431 ns"></ZoomEndTime>
-      <Cursor1Time time="130.030 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="127.201 ns"></ZoomEndTime>
+      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="163"></NameColumnWidth>
-      <ValueColumnWidth column_width="61"></ValueColumnWidth>
+      <NameColumnWidth column_width="160"></NameColumnWidth>
+      <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="9" />
+   <WVObjectSize size="10" />
    <wvobject type="logic" fp_name="/memory_test/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -49,11 +49,15 @@
       <obj_property name="ObjectShortName">write_addr[31:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/memory_test/bytes_to_write">
-      <obj_property name="ElementShortName">bytes_to_write[3:0]</obj_property>
-      <obj_property name="ObjectShortName">bytes_to_write[3:0]</obj_property>
+      <obj_property name="ElementShortName">bytes_to_write[2:0]</obj_property>
+      <obj_property name="ObjectShortName">bytes_to_write[2:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/memory_test/write_data">
       <obj_property name="ElementShortName">write_data[31:0]</obj_property>
       <obj_property name="ObjectShortName">write_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/memory_test/write_done">
+      <obj_property name="ElementShortName">write_done</obj_property>
+      <obj_property name="ObjectShortName">write_done</obj_property>
    </wvobject>
 </wave_config>
