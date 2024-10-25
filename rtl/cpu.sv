@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 // a single-cycle cpu
-module cpu(
+module cpu (
     input logic clk,
     input logic rst
 );

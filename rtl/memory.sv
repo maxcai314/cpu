@@ -27,7 +27,7 @@ module memory #(
 
     logic [7:0] data [MEM_BYTE_SIZE];
     
-    logic write_timer; // simualtion: only write on every other cycle
+    logic write_timer; // simulation: only write on every other cycle
     
     always_ff @(posedge clk) if (rst) begin
         write_timer <= '1;
