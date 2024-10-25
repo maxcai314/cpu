@@ -92,15 +92,18 @@ module decode_stage #(
         .funct_3_valid ( funct_3_valid )
     );
 
-    logic has_input;
-    assign done_next = has_input; // combinational only
-    assign stall_prev = next_stall; // combinational only, no other stall conditions
-
     logic transfer_prev;
-    assign transfer_prev = prev_done && !stall_prev;
-
     logic transfer_next;
-    assign transfer_next = done_next && !next_stall;
+    logic has_input;
+
+    always_comb begin
+        transfer_prev = prev_done && !stall_prev;
+        transfer_next = done_next && !next_stall;
+
+        stall_prev = has_input && !transfer_next;
+
+        done_next = has_input; // combinational only; no delay
+    end
 
     always_ff @(posedge clk) if (rst) begin
         has_input <= '0;
