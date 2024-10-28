@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module registers #(
-    parameter DATA_WIDTH = 32,
+    localparam DATA_WIDTH = 32,
     localparam NUM_REGISTERS = 32,
     localparam REGISTER_INDEXING_WIDTH = $clog2(NUM_REGISTERS)
 ) (
