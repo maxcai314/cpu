@@ -2,10 +2,7 @@
 
 module arithmetic #(
     parameter DATA_WIDTH = 32
-)(
-    input logic clk,
-    input logic rst,
-    
+) (
     input logic [DATA_WIDTH - 1:0] lhs, // rs1 value
     input logic lhs_valid,
     
@@ -22,7 +19,7 @@ module arithmetic #(
     output logic arithmetic_code_valid
     output logic result_valid
 );
-    
+
     always_comb begin
         unique case ({operation, metadata})
             // RV32I operations

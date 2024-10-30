@@ -23,9 +23,6 @@ module arithmetic_test (
     logic result_valid;
     
     arithmetic arithmetic (
-        .clk ( clk ),
-        .rst ( rst ),
-        
         .lhs ( lhs ),
         .lhs_valid ( lhs_valid ),
         

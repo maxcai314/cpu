@@ -55,7 +55,7 @@ module decode_stage #(
     output logic opcode_valid,
     
     output logic [IMMEDIATE_WIDTH - 1:0] immediate_data,
-    output logic immediate_valid,
+    output logic immediate_data_valid,
     
     output logic [DATA_WIDTH - 1:0] register_1_data,
     output logic register_1_data_valid,
@@ -78,6 +78,7 @@ module decode_stage #(
     logic [INSTRUCTION_WIDTH - 1:0] instruction_data_i;
     logic instruction_data_valid_i;
 
+    logic immediate_valid;
     logic register_1_valid;
     logic register_2_valid;
 
@@ -118,6 +119,8 @@ module decode_stage #(
         .funct_3 ( funct_3 ),
         .funct_3_valid ( funct_3_valid )
     );
+
+    assign immediate_data_valid = instruction_data_valid && immediate_valid;
 
     logic register_1_stall;
     logic register_2_stall;
@@ -171,6 +174,7 @@ module decode_stage #(
         end
     end
 
+    // transfer logic
     logic transfer_prev;
     logic transfer_next;
     logic has_input;
@@ -196,6 +200,7 @@ module decode_stage #(
                 program_count_valid_i <= program_count_valid;
                 instruction_data_i <= instruction_data;
                 instruction_data_valid_i <= instruction_data_valid;
+                
                 has_input <= '1;
             end else begin
                 has_input <= '0;

@@ -141,9 +141,6 @@ module cpu (
     logic arithmetic_result_valid;
     
     arithmetic arithmetic (
-        .clk ( clk ),
-        .rst ( rst ),
-        
         .lhs ( lhs ),
         .lhs_valid ( lhs_valid ),
         
