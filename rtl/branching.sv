@@ -14,20 +14,23 @@ module branching #(
     input logic operation_valid,
 
     output logic branch_condition,
+    output logic branch_code_valid,
     output logic branch_valid
 );
     
     always_comb begin
         unique case (operation)
-            3'h0 : begin branch_condition = lhs == rhs;                       branch_valid = '1; end
-            3'h1 : begin branch_condition = lhs != rhs;                       branch_valid = '1; end
-            3'h4 : begin branch_condition = $signed(lhs) <  $signed(rhs);     branch_valid = '1; end
-            3'h5 : begin branch_condition = $signed(lhs) >= $signed(rhs);     branch_valid = '1; end
-            3'h6 : begin branch_condition = $unsigned(lhs) <  $unsigned(rhs); branch_valid = '1; end
-            3'h7 : begin branch_condition = $unsigned(lhs) >= $unsigned(rhs); branch_valid = '1; end
+            3'h0 : begin branch_condition = lhs == rhs;                       branch_code_valid = '1; end
+            3'h1 : begin branch_condition = lhs != rhs;                       branch_code_valid = '1; end
+            3'h4 : begin branch_condition = $signed(lhs) <  $signed(rhs);     branch_code_valid = '1; end
+            3'h5 : begin branch_condition = $signed(lhs) >= $signed(rhs);     branch_code_valid = '1; end
+            3'h6 : begin branch_condition = $unsigned(lhs) <  $unsigned(rhs); branch_code_valid = '1; end
+            3'h7 : begin branch_condition = $unsigned(lhs) >= $unsigned(rhs); branch_code_valid = '1; end
             
-            default : begin branch_condition = 'X; branch_valid = '0; end
+            default : begin branch_condition = 'X; branch_code_valid = '0; end
         endcase
     end
+
+    assign branch_valid = branch_code_valid && lhs_valid && rhs_valid && operation_valid;
 
 endmodule

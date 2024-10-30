@@ -93,7 +93,7 @@ module decode_stage #(
         .load_upper ( load_upper ),
         .load_upper_pc ( load_upper_pc ),
         .environment ( environment ),
-        .opcode_valid ( opcode_valid ),
+        .opcode_valid ( opcode_valid ), // should result in exception
         
         .immediate_data ( immediate_data ),
         .immediate_valid ( immediate_valid ),
@@ -128,6 +128,7 @@ module decode_stage #(
     end
 
     logic branch_condition;
+    logic branch_code_valid;
     logic branch_valid;
 
     branching branching (
@@ -140,7 +141,8 @@ module decode_stage #(
         .operation( funct_3 ),
         .operation_valid( funct_3_valid ),
 
-        .branch_condition( branch_taken ),
+        .branch_condition( branch_condition ),
+        .branch_code_valid( branch_code_valid ), // should result in exception
         .branch_valid( branch_valid )
     );
 
@@ -148,7 +150,7 @@ module decode_stage #(
         if (branch) begin
             control_flow_affected = branch_condition;
             jump_target = program_count + immediate_data;
-            jump_target_valid = immediate_valid; // !branch_valid should result in a decode exception, not an error
+            jump_target_valid = branch_valid && immediate_valid;
         end else if (immediate_jump) begin
             control_flow_affected = '1;
             jump_target = program_count + immediate_data;
