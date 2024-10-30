@@ -33,11 +33,15 @@ module decode_stage #(
 
     // pipeline inputs
     input logic [ADDR_WIDTH - 1:0] program_count,
+    input logic program_count_valid,
     input logic [INSTRUCTION_WIDTH - 1:0] instruction_data,
     input logic instruction_data_valid,
     // todo: exceptions from prev stage
 
     // pipeline outputs
+    output logic [ADDR_WIDTH - 1:0] program_count,
+    output logic program_count_valid,
+
     output logic register_arith,
     output logic immediate_arith,
     output logic load,
@@ -70,6 +74,7 @@ module decode_stage #(
 );
     // interal copy of inputs
     logic [ADDR_WIDTH - 1:0] program_count_i;
+    logic program_count_valid_i;
     logic [INSTRUCTION_WIDTH - 1:0] instruction_data_i;
     logic instruction_data_valid_i;
 
@@ -149,12 +154,12 @@ module decode_stage #(
     always_comb begin
         if (branch) begin
             control_flow_affected = branch_condition;
-            jump_target = program_count + immediate_data;
-            jump_target_valid = branch_valid && immediate_valid;
+            jump_target = program_count_i + immediate_data;
+            jump_target_valid = program_count_valid_i && branch_valid && immediate_valid;
         end else if (immediate_jump) begin
             control_flow_affected = '1;
-            jump_target = program_count + immediate_data;
-            jump_target_valid = immediate_valid;
+            jump_target = program_count_i + immediate_data;
+            jump_target_valid = program_count_valid_i && immediate_valid;
         end else if (register_jump) begin
             control_flow_affected = '1;
             jump_target = register_1_data + immediate_data;
@@ -188,6 +193,7 @@ module decode_stage #(
             // try to accept new input
             if (transfer_prev) begin
                 program_count_i <= program_count;
+                program_count_valid_i <= program_count_valid;
                 instruction_data_i <= instruction_data;
                 instruction_data_valid_i <= instruction_data_valid;
                 has_input <= '1;
