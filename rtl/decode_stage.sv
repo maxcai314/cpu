@@ -114,20 +114,6 @@ module decode_stage #(
         .funct_3_valid ( funct_3_valid )
     );
 
-    branching branching (
-        .lhs( register_1_data ),
-        .lhs_valid( register_1_data_valid ),
-
-        .rhs( register_2_data ),
-        .rhs_valid( register_2_data_valid ),
-
-        .operation( funct_3 ),
-        .operation_valid( funct_3_valid ),
-
-        .branch_condition( control_flow_affected ),
-        .branch_valid( jump_target_valid )
-    );
-
     logic register_1_stall;
     logic register_2_stall;
     
@@ -139,6 +125,43 @@ module decode_stage #(
         register_2_data = register_read_2_data;
         register_2_data_valid = register_2_valid && !register_read_2_contended;
         register_2_stall = register_2_valid && register_read_2_contended;
+    end
+
+    logic branch_condition;
+    logic branch_valid;
+
+    branching branching (
+        .lhs( register_1_data ),
+        .lhs_valid( register_1_data_valid ),
+
+        .rhs( register_2_data ),
+        .rhs_valid( register_2_data_valid ),
+
+        .operation( funct_3 ),
+        .operation_valid( funct_3_valid ),
+
+        .branch_condition( branch_taken ),
+        .branch_valid( branch_valid )
+    );
+
+    always_comb begin
+        if (branch) begin
+            control_flow_affected = branch_condition;
+            jump_target = program_count + immediate_data;
+            jump_target_valid = immediate_valid; // !branch_valid should result in a decode exception, not an error
+        end else if (immediate_jump) begin
+            control_flow_affected = '1;
+            jump_target = program_count + immediate_data;
+            jump_target_valid = immediate_valid;
+        end else if (register_jump) begin
+            control_flow_affected = '1;
+            jump_target = register_1_data + immediate_data;
+            jump_target_valid = register_1_data_valid && immediate_valid;
+        end else begin
+            control_flow_affected = '0;
+            jump_target = 'X;
+            jump_target_valid = '0;
+        end
     end
 
     logic transfer_prev;
