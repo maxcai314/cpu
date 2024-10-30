@@ -4,9 +4,6 @@ module decoder #(
     localparam INSTRUCTION_WIDTH = 32,
     localparam IMMEDIATE_WIDTH = 32
 ) (
-    input logic clk,
-    input logic rst,
-    
     input logic [INSTRUCTION_WIDTH - 1:0] instruction_data,
     input logic instruction_data_valid,
     

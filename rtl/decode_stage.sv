@@ -26,6 +26,11 @@ module decode_stage #(
     input logic [DATA_WIDTH - 1:0] register_read_2_data,
     input logic register_read_2_contended,
 
+    // global interactions
+    output logic control_flow_affected,
+    output logic [ADDR_WIDTH - 1:0] jump_target,
+    output logic jump_target_valid,
+
     // pipeline inputs
     input logic [ADDR_WIDTH - 1:0] program_count,
     input logic [INSTRUCTION_WIDTH - 1:0] instruction_data,
@@ -107,6 +112,20 @@ module decode_stage #(
         
         .funct_3 ( funct_3 ),
         .funct_3_valid ( funct_3_valid )
+    );
+
+    branching branching (
+        .lhs( register_1_data ),
+        .lhs_valid( register_1_data_valid ),
+
+        .rhs( register_2_data ),
+        .rhs_valid( register_2_data_valid ),
+
+        .operation( funct_3 ),
+        .operation_valid( funct_3_valid ),
+
+        .branch_condition( control_flow_affected ),
+        .branch_valid( jump_target_valid )
     );
 
     logic register_1_stall;

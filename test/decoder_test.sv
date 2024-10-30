@@ -40,9 +40,6 @@ module decoder_test(
     logic funct_3_valid;
     
     decoder decoder (
-        .clk ( clk ),
-        .rst ( rst ),
-        
         .instruction_data ( instruction_data ),
         .instruction_data_valid ( instruction_data_valid ),
         
