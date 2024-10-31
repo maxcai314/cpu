@@ -115,6 +115,7 @@ module execute_stage #(
     logic [14:12] funct_3_i;
     logic funct_3_valid_i;
 
+    // pass-through
     always_comb begin
         program_count_out = program_count_i;
         program_count_valid_out = program_count_valid_i;
@@ -136,7 +137,7 @@ module execute_stage #(
         write_register_out = write_register_i;
         write_register_valid_out = write_register_valid_i;
         memory_store_data_out = register_2_data_i;
-        memory_store_data_valid_out = register_2_data_valid_i;
+        memory_store_data_valid_out = register_2_data_valid_i && store_i;
     end
 
     logic upper_immediate [IMMEDIATE_WIDTH - 1:0];
@@ -302,7 +303,7 @@ module execute_stage #(
                 register_1_data_i <= register_1_data_in;
                 register_1_data_valid_i <= register_1_data_valid_in;
                 register_2_data_i <= register_2_data_in;
-                register_2_data_valid_i <= register_2_data_vali_in;
+                register_2_data_valid_i <= register_2_data_valid_in;
                 write_register_i <= write_register_in;
                 write_register_valid_i <= write_register_valid_in;
                 funct_7_i <= funct_7_in;
