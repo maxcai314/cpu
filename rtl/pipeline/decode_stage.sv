@@ -1,5 +1,6 @@
 `timescale 1ns / 1ps
 
+// decodes and fetches register data
 module decode_stage #(
     localparam ADDR_WIDTH = 32,
     localparam DATA_WIDTH = 32,

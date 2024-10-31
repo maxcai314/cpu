@@ -1,5 +1,6 @@
 `timescale 1ns / 1ps
 
+// uses ALU to compute result or effective address
 module execute_stage #(
     localparam ADDR_WIDTH = 32,
     localparam DATA_WIDTH = 32,
@@ -76,12 +77,9 @@ module execute_stage #(
     
     output logic [14:12] funct_3_out,
     output logic funct_3_valid_out,
-
-    output logic [DATA_WIDTH - 1:0] register_1_data_out,
-    output logic register_1_data_valid_out,
     
-    output logic [DATA_WIDTH - 1:0] register_2_data_out,
-    output logic register_2_data_valid_out,
+    output logic [DATA_WIDTH - 1:0] memory_store_data_out, // register 2
+    output logic memory_store_data_valid_out,
 
     output logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_out,
     output logic write_register_valid_out,
@@ -117,8 +115,29 @@ module execute_stage #(
     logic [14:12] funct_3_i;
     logic funct_3_valid_i;
 
-    assign program_count_out = program_count_i;
-    assign program_count_valid_out = program_count_valid_i;
+    always_comb begin
+        program_count_out = program_count_i;
+        program_count_valid_out = program_count_valid_i;
+        register_arith_out = register_arith_i;
+        immediate_arith_out = immediate_arith_i;
+        load_out = load_i;
+        store_out = store_i;
+        branch_out = branch_i;
+        immediate_jump_out = immediate_jump_i;
+        register_jump_out = register_jump_i;
+        load_upper_out = load_upper_i;
+        load_upper_pc_out = load_upper_pc_i;
+        environment_out = environment_i;
+        opcode_legal_out = opcode_legal_i;
+        funct_7_out = funct_7_i;
+        funct_7_valid_out = funct_7_valid_i;
+        funct_3_out = funct_3_i;
+        funct_3_valid_out = funct_3_valid_i;
+        write_register_out = write_register_i;
+        write_register_valid_out = write_register_valid_i;
+        memory_store_data_out = register_2_data_i;
+        memory_store_data_valid_out = register_2_data_valid_i;
+    end
 
     logic upper_immediate [IMMEDIATE_WIDTH - 1:0];
     assign upper_immediate = immediate_data << 12;
