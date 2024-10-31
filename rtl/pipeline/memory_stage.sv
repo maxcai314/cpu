@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 // loads or stores
-module execute_stage #(
+module memory_stage #(
     localparam ADDR_WIDTH = 32,
     localparam DATA_WIDTH = 32,
     localparam INSTRUCTION_WIDTH = 32,
