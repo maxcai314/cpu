@@ -21,70 +21,73 @@ module execute_stage #(
     // ...
 
     // pipeline inputs
-    input logic [ADDR_WIDTH - 1:0] program_count,
-    input logic program_count_valid,
+    input logic [ADDR_WIDTH - 1:0] program_count_in,
+    input logic program_count_valid_in,
 
-    input logic register_arith,  // register arithmetic
-    input logic immediate_arith, // immediate arithmetic
-    input logic load,            // register_1_data + immediate
-    input logic store,           // register_1_data + immediate
-    input logic branch,          // no result
-    input logic immediate_jump,  // program_count + 4
-    input logic register_jump,   // program_count + 4
-    input logic load_upper,      // upper_immediate + 0
-    input logic load_upper_pc,   // upper_immediate + program_count
-    input logic environment,     // no result
-    input logic opcode_legal,
+    input logic register_arith_in,  // register arithmetic
+    input logic immediate_arith_in, // immediate arithmetic
+    input logic load_in,            // register_1_data + immediate
+    input logic store_in,           // register_1_data + immediate
+    input logic branch_in,          // no result
+    input logic immediate_jump_in,  // program_count + 4
+    input logic register_jump_in,   // program_count + 4
+    input logic load_upper_in,      // upper_immediate + 0
+    input logic load_upper_pc_in,   // upper_immediate + program_count
+    input logic environment_in,     // no result
+    input logic opcode_legal_in,
     
-    input logic [IMMEDIATE_WIDTH - 1:0] immediate_data,
-    input logic immediate_data_valid,
+    input logic [IMMEDIATE_WIDTH - 1:0] immediate_data_in,
+    input logic immediate_data_valid_in,
     
-    input logic [DATA_WIDTH - 1:0] register_1_data,
-    input logic register_1_data_valid,
+    input logic [DATA_WIDTH - 1:0] register_1_data_in,
+    input logic register_1_data_valid_in,
     
-    input logic [DATA_WIDTH - 1:0] register_2_data,
-    input logic register_2_data_valid,
+    input logic [DATA_WIDTH - 1:0] register_2_data_in,
+    input logic register_2_data_valid_in,
     
-    input logic [REGISTER_INDEXING_WIDTH - 1:0] write_register,
-    input logic write_register_valid,
+    input logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_in,
+    input logic write_register_valid_in,
     
-    input logic [31:25] funct_7,
-    input logic funct_7_valid,
+    input logic [31:25] funct_7_in,
+    input logic funct_7_valid_in,
     
-    input logic [14:12] funct_3,
-    input logic funct_3_valid
+    input logic [14:12] funct_3_in,
+    input logic funct_3_valid_in,
     // todo: exceptions from prev stage
 
     // pipeline outputs
-    output logic register_arith,
-    output logic immediate_arith,
-    output logic load,
-    output logic store,
-    output logic branch,
-    output logic immediate_jump,
-    output logic register_jump,
-    output logic load_upper,
-    output logic load_upper_pc,
-    output logic environment,
-    output logic opcode_legal,
+    output logic [ADDR_WIDTH - 1:0] program_count_out,
+    output logic program_count_valid_out,
 
-    output logic [31:25] funct_7,
-    output logic funct_7_valid,
+    output logic register_arith_out,
+    output logic immediate_arith_out,
+    output logic load_out,
+    output logic store_out,
+    output logic branch_out,
+    output logic immediate_jump_out,
+    output logic register_jump_out,
+    output logic load_upper_out,
+    output logic load_upper_pc_out,
+    output logic environment_out,
+    output logic opcode_legal_out,
+
+    output logic [31:25] funct_7_out,
+    output logic funct_7_valid_out,
     
-    output logic [14:12] funct_3,
-    output logic funct_3_valid
+    output logic [14:12] funct_3_out,
+    output logic funct_3_valid_out,
 
-    output logic [DATA_WIDTH - 1:0] register_1_data,
-    output logic register_1_data_valid,
+    output logic [DATA_WIDTH - 1:0] register_1_data_out,
+    output logic register_1_data_valid_out,
     
-    output logic [DATA_WIDTH - 1:0] register_2_data,
-    output logic register_2_data_valid,
+    output logic [DATA_WIDTH - 1:0] register_2_data_out,
+    output logic register_2_data_valid_out,
 
-    output logic [REGISTER_INDEXING_WIDTH - 1:0] write_register,
-    output logic write_register_valid,
+    output logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_out,
+    output logic write_register_valid_out,
 
-    output logic [DATA_WIDTH - 1:0] result_data, // register result or effective address
-    output logic result_data_valid,
+    output logic [DATA_WIDTH - 1:0] result_data_out, // register result or effective address
+    output logic result_data_valid_out,
 );
 
     // internal copy of inputs
@@ -113,6 +116,9 @@ module execute_stage #(
     logic funct_7_valid_i;
     logic [14:12] funct_3_i;
     logic funct_3_valid_i;
+
+    assign program_count_out = program_count_i;
+    assign program_count_valid_out = program_count_valid_i;
 
     logic upper_immediate [IMMEDIATE_WIDTH - 1:0];
     assign upper_immediate = immediate_data << 12;
@@ -259,31 +265,31 @@ module execute_stage #(
         if (!has_input || transfer_next) begin
             // try to accept new input
             if (transfer_prev) begin
-                program_count_i <= program_count;
-                program_count_valid_i <= program_count_valid;
-                register_arith_i <= register_arith;
-                immediate_arith_i <= immediate_arith;
-                load_i <= load;
-                store_i <= store;
-                branch_i <= branch;
-                immediate_jump_i <= immediate_jump;
-                register_jump_i <= register_jump;
-                load_upper_i <= load_upper;
-                load_upper_pc_i <= load_upper_pc;
-                environment_i <= environment;
-                opcode_legal_i <= opcode_legal;
-                immediate_data_i <= immediate_data;
-                immediate_data_valid_i <= immediate_data_valid;
-                register_1_data_i <= register_1_data;
-                register_1_data_valid_i <= register_1_data_valid;
-                register_2_data_i <= register_2_data;
-                register_2_data_valid_i <= register_2_data_valid;
-                write_register_i <= write_register;
-                write_register_valid_i <= write_register_valid;
-                funct_7_i <= funct_7;
-                funct_7_valid_i <= funct_7_valid;
-                funct_3_i <= funct_3;
-                funct_3_valid_i <= funct_3_valid;
+                program_count_i <= program_count_in;
+                program_count_valid_i <= program_count_valid_in;
+                register_arith_i <= register_arith_in;
+                immediate_arith_i <= immediate_arith_in;
+                load_i <= load_in;
+                store_i <= store_in;
+                branch_i <= branch_in;
+                immediate_jump_i <= immediate_jump_in;
+                register_jump_i <= register_jump_in;
+                load_upper_i <= load_upper_in;
+                load_upper_pc_i <= load_upper_pc_in;
+                environment_i <= environment_in;
+                opcode_legal_i <= opcode_legal_in;
+                immediate_data_i <= immediate_data_in;
+                immediate_data_valid_i <= immediate_data_valid_in;
+                register_1_data_i <= register_1_data_in;
+                register_1_data_valid_i <= register_1_data_valid_in;
+                register_2_data_i <= register_2_data_in;
+                register_2_data_valid_i <= register_2_data_vali_in;
+                write_register_i <= write_register_in;
+                write_register_valid_i <= write_register_valid_in;
+                funct_7_i <= funct_7_in;
+                funct_7_valid_i <= funct_7_valid_in;
+                funct_3_i <= funct_3_in;
+                funct_3_valid_i <= funct_3_valid_in;
 
                 has_input <= '1;
             end else begin

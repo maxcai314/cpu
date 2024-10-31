@@ -32,45 +32,45 @@ module decode_stage #(
     output logic jump_target_valid,
 
     // pipeline inputs
-    input logic [ADDR_WIDTH - 1:0] program_count,
-    input logic program_count_valid,
-    input logic [INSTRUCTION_WIDTH - 1:0] instruction_data,
-    input logic instruction_data_valid,
+    input logic [ADDR_WIDTH - 1:0] program_count_in,
+    input logic program_count_valid_in,
+    input logic [INSTRUCTION_WIDTH - 1:0] instruction_data_in,
+    input logic instruction_data_valid_in,
     // todo: exceptions from prev stage
 
     // pipeline outputs
-    output logic [ADDR_WIDTH - 1:0] program_count,
-    output logic program_count_valid,
+    output logic [ADDR_WIDTH - 1:0] program_count_out,
+    output logic program_count_valid_out,
 
-    output logic register_arith,
-    output logic immediate_arith,
-    output logic load,
-    output logic store,
-    output logic branch,
-    output logic immediate_jump,
-    output logic register_jump,
-    output logic load_upper,
-    output logic load_upper_pc,
-    output logic environment,
-    output logic opcode_legal,
+    output logic register_arith_out,
+    output logic immediate_arith_out,
+    output logic load_out,
+    output logic store_out,
+    output logic branch_out,
+    output logic immediate_jump_out,
+    output logic register_jump_out,
+    output logic load_upper_out,
+    output logic load_upper_pc_out,
+    output logic environment_out,
+    output logic opcode_legal_out,
     
-    output logic [IMMEDIATE_WIDTH - 1:0] immediate_data,
-    output logic immediate_data_valid,
+    output logic [IMMEDIATE_WIDTH - 1:0] immediate_data_out,
+    output logic immediate_data_valid_out,
     
-    output logic [DATA_WIDTH - 1:0] register_1_data,
-    output logic register_1_data_valid,
+    output logic [DATA_WIDTH - 1:0] register_1_data_out,
+    output logic register_1_data_valid_out,
     
-    output logic [DATA_WIDTH - 1:0] register_2_data,
-    output logic register_2_data_valid,
+    output logic [DATA_WIDTH - 1:0] register_2_data_out,
+    output logic register_2_data_valid_out,
     
-    output logic [REGISTER_INDEXING_WIDTH - 1:0] write_register,
-    output logic write_register_valid,
+    output logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_out,
+    output logic write_register_valid_out,
     
-    output logic [31:25] funct_7,
-    output logic funct_7_valid,
+    output logic [31:25] funct_7_out,
+    output logic funct_7_valid_out,
     
-    output logic [14:12] funct_3,
-    output logic funct_3_valid
+    output logic [14:12] funct_3_out,
+    output logic funct_3_valid_out
 );
     // interal copy of inputs
     logic [ADDR_WIDTH - 1:0] program_count_i;
@@ -89,19 +89,19 @@ module decode_stage #(
         .instruction_data ( instruction_data_i ),
         .instruction_data_valid ( instruction_data_valid_i ),
         
-        .register_arith ( register_arith ),
-        .immediate_arith ( immediate_arith ),
-        .load ( load ),
-        .store ( store ),
-        .branch ( branch ),
-        .immediate_jump ( immediate_jump ),
-        .register_jump ( register_jump ),
-        .load_upper ( load_upper ),
-        .load_upper_pc ( load_upper_pc ),
-        .environment ( environment ),
-        .opcode_legal ( opcode_legal ), // should result in exception
+        .register_arith ( register_arith_out ),
+        .immediate_arith ( immediate_arith_out ),
+        .load ( load_out ),
+        .store ( store_out ),
+        .branch ( branch_out ),
+        .immediate_jump ( immediate_jump_out ),
+        .register_jump ( register_jump_out ),
+        .load_upper ( load_upper_out ),
+        .load_upper_pc ( load_upper_pc_out ),
+        .environment ( environment_out ),
+        .opcode_legal ( opcode_legal_out ), // should result in exception
         
-        .immediate_data ( immediate_data ),
+        .immediate_data ( immediate_data_out ),
         .immediate_valid ( immediate_valid ),
         
         .register_1 ( register_read_1 ),
@@ -110,17 +110,20 @@ module decode_stage #(
         .register_2 ( register_read_2 ),
         .register_2_valid ( register_2_valid ),
         
-        .write_register ( write_register ),
-        .write_register_valid ( write_register_valid ),
+        .write_register ( write_register_out ),
+        .write_register_valid ( write_register_valid_out ),
         
-        .funct_7 ( funct_7 ),
-        .funct_7_valid ( funct_7_valid ),
+        .funct_7 ( funct_7_out ),
+        .funct_7_valid ( funct_7_valid_out ),
         
-        .funct_3 ( funct_3 ),
-        .funct_3_valid ( funct_3_valid )
+        .funct_3 ( funct_3_out ),
+        .funct_3_valid ( funct_3_valid_out )
     );
 
     assign immediate_data_valid = instruction_data_valid && immediate_valid;
+
+    assign program_count_out = program_count_i;
+    assign program_count_valid_out = program_count_valid_i;
 
     logic register_1_stall;
     logic register_2_stall;
@@ -196,10 +199,10 @@ module decode_stage #(
         if (!has_input || transfer_next) begin
             // try to accept new input
             if (transfer_prev) begin
-                program_count_i <= program_count;
-                program_count_valid_i <= program_count_valid;
-                instruction_data_i <= instruction_data;
-                instruction_data_valid_i <= instruction_data_valid;
+                program_count_i <= program_count_in;
+                program_count_valid_i <= program_count_valid_in;
+                instruction_data_i <= instruction_data_in;
+                instruction_data_valid_i <= instruction_data_valid_in;
                 
                 has_input <= '1;
             end else begin
