@@ -54,6 +54,7 @@ module fetch_stage #(
         instruction_addr = program_count_i;
         instruction_fetch_activate = has_input;
         instruction_data_out = instruction_data;
+        instruction_data_valid_out = instruction_fetch_done;
     end
 
     // todo: prevent multiple fetches/refetching the same thing if stalled

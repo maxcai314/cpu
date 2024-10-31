@@ -14,7 +14,7 @@ module memory #(
     input logic [DATA_INDEXING_WIDTH:0] bytes_to_write,
     input logic [ADDR_WIDTH - 1:0] write_addr,
     input logic [DATA_WIDTH - 1:0] write_data,
-    input logic write_data_valid,
+    input logic write_activate,
     
     output logic write_done, // whether the write will be finished on the next posedge
     
@@ -40,7 +40,7 @@ module memory #(
     // todo: use realistic memory; also see if fetch failed
     assign instruction_fetch_done = '1;
     assign fetch_done = '1;
-    assign write_done = write_data_valid && write_timer; // whether or not the write will happen next cycle
+    assign write_done = write_activate && write_timer; // whether or not the write will happen next cycle
     
     always_ff @(posedge clk) if (rst) begin
 //        for (logic [ADDR_WIDTH - 1:0] i=0; i<MEM_BYTE_SIZE; i++)

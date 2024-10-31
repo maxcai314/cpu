@@ -15,9 +15,9 @@ module registers_test (
     
     logic [4:0] write_register;
     logic [31:0] write_data;
-    logic write_data_valid;
+    logic write_activate;
     
-    logic write_valid;
+    logic write_done;
     
     registers registers (
         .clk ( clk ),
@@ -31,9 +31,9 @@ module registers_test (
         
         .write_register ( write_register ),
         .write_data ( write_data ),
-        .write_data_valid ( write_data_valid ),
+        .write_activate ( write_activate ),
         
-        .write_valid ( write_valid )
+        .write_done ( write_done )
     );
     
     initial forever begin
@@ -62,10 +62,10 @@ module registers_test (
         // try to write to zero
         write_register = 5'b00000;
         write_data = 32'hffff_ffff;
-        write_data_valid = '1;
+        write_activate = '1;
         
         @(posedge clk)
-        assert(write_valid);
+        assert(write_done);
         assert(result_1 == 32'h0000_0000);
         
         // try to write to one
@@ -73,26 +73,26 @@ module registers_test (
         write_data = 32'hffff_ffff;
         
         @(posedge clk)
-        assert(write_valid);
+        assert(write_done);
         assert(result_2 == 32'hffff_ffff);
         
         write_data = 32'hdead_beef;
         
         @(posedge clk)
-        assert(write_valid);
+        assert(write_done);
         assert(result_2 == 32'hdead_beef);
         
         // disable write
         write_data = 32'haabb_ccdd;
-        write_data_valid = '0;
+        write_activate = '0;
         
         @(posedge clk)
-        assert(!write_valid);
+        assert(!write_done);
         assert(result_2 == 32'hdead_beef);
         assert(result_2 != 32'haabb_ccdd);
         
         @(posedge clk)
-        assert(!write_valid);
+        assert(!write_done);
         assert(result_2 == 32'hdead_beef);
         assert(result_2 != 32'haabb_ccdd);
     end

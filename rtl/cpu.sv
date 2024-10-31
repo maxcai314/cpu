@@ -80,7 +80,7 @@ module cpu (
     logic [31:0] write_register_data;
     logic write_register_data_valid;
     
-    logic register_write_valid;
+    logic register_write_done;
     
     registers registers (
         .clk ( clk ),
@@ -94,9 +94,9 @@ module cpu (
         
         .write_register ( write_register ),
         .write_data ( write_register_data ),
-        .write_data_valid ( write_register_data_valid ),
+        .write_activate ( write_register_data_valid ),
         
-        .write_valid ( register_write_valid )
+        .write_done ( register_write_done )
     );
     
     logic [31:0] fetch_addr;
@@ -104,7 +104,7 @@ module cpu (
     logic [2:0] bytes_to_write; // zero for no-op
     logic [31:0] write_addr;
     logic [31:0] write_data;
-    logic write_data_valid;
+    logic write_activate;
     
     logic write_done;
     
@@ -121,7 +121,7 @@ module cpu (
         .bytes_to_write ( bytes_to_write ),
         .write_addr ( write_addr ),
         .write_data ( write_data ),
-        .write_data_valid ( write_data_valid ),
+        .write_activate ( write_activate ),
         .write_done ( write_done ),
         
         .instruction_data ( instruction_data ),
@@ -188,7 +188,7 @@ module cpu (
     endcase
     
     assign write_data = register_result_2;
-    assign write_data_valid = store;
+    assign write_activate = store;
     
     logic execution_done;
     logic [31:0] next_instruction_addr;
@@ -224,7 +224,7 @@ module cpu (
     
     always_comb begin
         if (write_register_valid) begin
-            execution_done = register_write_valid;
+            execution_done = register_write_done;
         end else if (store) begin
             execution_done = write_done;
         end else begin

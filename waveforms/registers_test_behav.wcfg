@@ -36,9 +36,9 @@
       <obj_property name="ElementShortName">write_data[31:0]</obj_property>
       <obj_property name="ObjectShortName">write_data[31:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/registers_test/registers/write_valid">
-      <obj_property name="ElementShortName">write_valid</obj_property>
-      <obj_property name="ObjectShortName">write_valid</obj_property>
+   <wvobject type="logic" fp_name="/registers_test/registers/write_done">
+      <obj_property name="ElementShortName">write_done</obj_property>
+      <obj_property name="ObjectShortName">write_done</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/registers_test/read_register_1">
       <obj_property name="ElementShortName">read_register_1[4:0]</obj_property>

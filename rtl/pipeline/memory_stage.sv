@@ -8,6 +8,7 @@ module memory_stage #(
     localparam IMMEDIATE_WIDTH = 32,
     localparam NUM_REGISTERS = 32,
     localparam REGISTER_INDEXING_WIDTH = $clog2(NUM_REGISTERS),
+    localparam DATA_BYTE_SIZE = DATA_WIDTH / 8,
     localparam DATA_INDEXING_WIDTH = $clog2(DATA_BYTE_SIZE)
 ) (
     input logic clk,

@@ -13,7 +13,7 @@ module memory_test(
     logic [2:0] bytes_to_write; // zero for no-op
     logic [31:0] write_addr;
     logic [31:0] write_data;
-    logic write_data_valid;
+    logic write_activate;
     
     logic write_done;
     
@@ -30,7 +30,7 @@ module memory_test(
         .bytes_to_write ( bytes_to_write ),
         .write_addr ( write_addr ),
         .write_data ( write_data ),
-        .write_data_valid ( write_data_valid ),
+        .write_activate ( write_activate ),
         
         .write_done ( write_done ),
         
@@ -54,7 +54,7 @@ module memory_test(
         rst = 0;
         
         bytes_to_write = 3'd0;
-        write_data_valid = '0;
+        write_activate = '0;
         
         // read from consecuitive words (4 bytes apart)
         instruction_addr = 32'h0100;
@@ -65,7 +65,7 @@ module memory_test(
         // set to ffff_ffff
         write_addr = 32'h0100;
         write_data = 32'hffff_ffff;
-        write_data_valid = '1;
+        write_activate = '1;
         bytes_to_write = 3'd4;
         
         do begin
@@ -80,13 +80,13 @@ module memory_test(
         write_data = 32'h0000_0000;
         
         // no-op
-        write_data_valid = '0;
+        write_activate = '0;
         @(posedge clk)
         assert(!write_done);
         assert(instruction_data == 32'hffff_ffff);
         // clear lower byte
         bytes_to_write = 3'd1;
-        write_data_valid = '1;
+        write_activate = '1;
         
         do begin
             @(posedge clk);
