@@ -19,7 +19,7 @@ module cpu (
     logic load_upper;
     logic load_upper_pc;
     logic environment;
-    logic opcode_valid;
+    logic opcode_legal;
     
     logic [31:0] immediate_data;
     logic immediate_valid;
@@ -53,7 +53,7 @@ module cpu (
         .load_upper ( load_upper ),
         .load_upper_pc ( load_upper_pc ),
         .environment ( environment ),
-        .opcode_valid ( opcode_valid ),
+        .opcode_legal ( opcode_legal ),
         
         .immediate_data ( immediate_data ),
         .immediate_valid ( immediate_valid ),
@@ -228,7 +228,7 @@ module cpu (
         end else if (store) begin
             execution_done = write_done;
         end else begin
-            execution_done = opcode_valid;
+            execution_done = opcode_legal;
         end // todo: ecall?
     end
     

@@ -72,9 +72,9 @@
       <obj_property name="ElementShortName">environment</obj_property>
       <obj_property name="ObjectShortName">environment</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/decoder_test/opcode_valid">
-      <obj_property name="ElementShortName">opcode_valid</obj_property>
-      <obj_property name="ObjectShortName">opcode_valid</obj_property>
+   <wvobject type="logic" fp_name="/decoder_test/opcode_legal">
+      <obj_property name="ElementShortName">opcode_legal</obj_property>
+      <obj_property name="ObjectShortName">opcode_legal</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/decoder_test/immediate_data">
       <obj_property name="ElementShortName">immediate_data[31:0]</obj_property>

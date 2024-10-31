@@ -52,7 +52,7 @@ module decode_stage #(
     output logic load_upper,
     output logic load_upper_pc,
     output logic environment,
-    output logic opcode_valid,
+    output logic opcode_legal,
     
     output logic [IMMEDIATE_WIDTH - 1:0] immediate_data,
     output logic immediate_data_valid,
@@ -99,7 +99,7 @@ module decode_stage #(
         .load_upper ( load_upper ),
         .load_upper_pc ( load_upper_pc ),
         .environment ( environment ),
-        .opcode_valid ( opcode_valid ), // should result in exception
+        .opcode_legal ( opcode_legal ), // should result in exception
         
         .immediate_data ( immediate_data ),
         .immediate_valid ( immediate_valid ),
@@ -136,7 +136,7 @@ module decode_stage #(
     end
 
     logic branch_condition;
-    logic branch_code_valid;
+    logic branch_code_legal;
     logic branch_valid;
 
     branching branching (
@@ -150,7 +150,7 @@ module decode_stage #(
         .operation_valid( funct_3_valid ),
 
         .branch_condition( branch_condition ),
-        .branch_code_valid( branch_code_valid ), // should result in exception
+        .branch_code_legal( branch_code_legal ), // should result in exception
         .branch_valid( branch_valid )
     );
 
@@ -183,9 +183,9 @@ module decode_stage #(
         transfer_prev = prev_done && !stall_prev;
         transfer_next = done_next && !next_stall;
 
-        stall_prev = has_input && !transfer_next;
+        stall_prev = rst || (has_input && !transfer_next);
 
-        done_next = has_input && !register_1_stall && !register_2_stall;
+        done_next = !rst && has_input && !register_1_stall && !register_2_stall;
     end
 
     always_ff @(posedge clk) if (rst) begin

@@ -17,7 +17,7 @@ module decoder #(
     output logic load_upper,
     output logic load_upper_pc,
     output logic environment,
-    output logic opcode_valid,
+    output logic opcode_legal,
     
     output logic [IMMEDIATE_WIDTH - 1:0] immediate_data,
     output logic immediate_valid,
@@ -87,22 +87,22 @@ module decoder #(
         if (!instruction_data_valid) begin
             immediate_data[IMMEDIATE_WIDTH - 1:0] = 'X;
             immediate_valid = 'X;
-            opcode_valid = '0;
+            opcode_legal = '0;
         end else if (r_type) begin
             immediate_data = 'X;
             immediate_valid = '0;
-            opcode_valid = '1;
+            opcode_legal = '1;
         end else if (i_type) begin
             immediate_data = (immediate_arith && override_immediate_arith) ?
                 $unsigned(instruction_data[24:20]) : // overrided for immediate shifts
                 $signed(instruction_data[31:20]); // normal i_type logic
             immediate_valid = '1;
-            opcode_valid = '1;
+            opcode_legal = '1;
         end else if (s_type) begin
             immediate_data[IMMEDIATE_WIDTH - 1:5] = $signed(instruction_data[31:25]);
             immediate_data[4:0] = instruction_data[11:7];
             immediate_valid = '1;
-            opcode_valid = '1;
+            opcode_legal = '1;
         end else if (b_type) begin
             immediate_data[IMMEDIATE_WIDTH - 1:12] = $signed(instruction_data[31]);
             immediate_data[10:5] = instruction_data[30:25];
@@ -110,12 +110,12 @@ module decoder #(
             immediate_data[11] = instruction_data[7];
             immediate_data[0] = '0;
             immediate_valid = '1;
-            opcode_valid = '1;
+            opcode_legal = '1;
         end else if (u_type) begin
             immediate_data[31:12] = instruction_data[31:12];
             immediate_data[11:0] = '0;
             immediate_valid = '1;
-            opcode_valid = '1;
+            opcode_legal = '1;
         end else if (j_type) begin
             immediate_data[IMMEDIATE_WIDTH - 1:20] = $signed(instruction_data[31]);
             immediate_data[10:1] = instruction_data[30:21];
@@ -123,11 +123,11 @@ module decoder #(
             immediate_data[19:12] = instruction_data[19:12];
             immediate_data[0] = '0;
             immediate_valid = '1;
-            opcode_valid = '1;
+            opcode_legal = '1;
         end else begin
             immediate_data[IMMEDIATE_WIDTH - 1:0] = 'X;
             immediate_valid = 'X;
-            opcode_valid = '0;
+            opcode_legal = '0;
         end
     end
     

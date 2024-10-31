@@ -20,7 +20,7 @@ module arithmetic_test (
     logic metadata_valid;
     
     logic [31:0] result;
-    logic arithmetic_code_valid;
+    logic arithmetic_code_legal;
     logic result_valid;
     
     arithmetic arithmetic (
@@ -37,7 +37,7 @@ module arithmetic_test (
         .metadata_valid ( metadata_valid ),
         
         .result ( result ),
-        .arithmetic_code_valid ( arithmetic_code_valid ),
+        .arithmetic_code_legal ( arithmetic_code_legal ),
         .result_valid ( result_valid )
     );
     
@@ -67,7 +67,7 @@ module arithmetic_test (
         operation = 3'h0;
         metadata = 7'h01; // invalid metadata
         @(posedge clk)
-        assert(!arithmetic_code_valid);
+        assert(!arithmetic_code_legal);
         assert(!result_valid);
         
         // invalid input
@@ -79,7 +79,7 @@ module arithmetic_test (
         operation = 3'h0; // valid operation
         metadata = 7'h00;
         @(posedge clk)
-        assert(arithmetic_code_valid);
+        assert(arithmetic_code_legal);
         assert(!result_valid);
         
         $display("testing invalid rhs");
@@ -90,7 +90,7 @@ module arithmetic_test (
         operation = 3'h0;
         metadata = 7'h00;
         @(posedge clk)
-        assert(arithmetic_code_valid);
+        assert(arithmetic_code_legal);
         assert(!result_valid);
         
         $display("testing invalid lhs and rhs");
@@ -101,7 +101,7 @@ module arithmetic_test (
         operation = 3'h0;
         metadata = 7'h00;
         @(posedge clk)
-        assert(arithmetic_code_valid);
+        assert(arithmetic_code_legal);
         assert(!result_valid);
         
         $display("testing invalid operation");
@@ -140,7 +140,7 @@ module arithmetic_test (
         rhs = 32'h0000_0000;
         // should read 0x0000_0000
         @(posedge clk)
-        assert(arithmetic_code_valid);
+        assert(arithmetic_code_legal);
         assert(result_valid);
         assert(result == 32'h0000_0000);
         

@@ -19,7 +19,7 @@ module decoder_test(
     logic load_upper;
     logic load_upper_pc;
     logic environment;
-    logic opcode_valid;
+    logic opcode_legal;
     
     logic [31:0] immediate_data;
     logic immediate_valid;
@@ -53,7 +53,7 @@ module decoder_test(
         .load_upper ( load_upper ),
         .load_upper_pc ( load_upper_pc ),
         .environment ( environment ),
-        .opcode_valid ( opcode_valid ),
+        .opcode_legal ( opcode_legal ),
         
         .immediate_data ( immediate_data ),
         .immediate_valid ( immediate_valid ),
@@ -103,7 +103,7 @@ module decoder_test(
         assert(!load_upper);
         assert(!load_upper_pc);
         assert(!environment);
-        assert(opcode_valid);
+        assert(opcode_legal);
         
         assert(immediate_data == 32'h0000_0017); // 23
         assert(immediate_valid);
@@ -126,7 +126,7 @@ module decoder_test(
         @(posedge clk)
         instruction_data_valid = '0;
         @(posedge clk)
-        assert(!opcode_valid);
+        assert(!opcode_legal);
         assert(!register_arith);
         assert(!immediate_arith);
         assert(!load);

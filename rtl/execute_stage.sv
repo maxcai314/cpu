@@ -34,7 +34,7 @@ module execute_stage #(
     input logic load_upper,      // upper_immediate + 0
     input logic load_upper_pc,   // upper_immediate + program_count
     input logic environment,     // no result
-    input logic opcode_valid,
+    input logic opcode_legal,
     
     input logic [IMMEDIATE_WIDTH - 1:0] immediate_data,
     input logic immediate_data_valid,
@@ -66,7 +66,7 @@ module execute_stage #(
     output logic load_upper,
     output logic load_upper_pc,
     output logic environment,
-    output logic opcode_valid,
+    output logic opcode_legal,
 
     output logic [31:25] funct_7,
     output logic funct_7_valid,
@@ -100,7 +100,7 @@ module execute_stage #(
     logic load_upper_i;
     logic load_upper_pc_i;
     logic environment_i;
-    logic opcode_valid_i;
+    logic opcode_legal_i;
     logic [IMMEDIATE_WIDTH - 1:0] immediate_data_i;
     logic immediate_data_valid_i;
     logic [DATA_WIDTH - 1:0] register_1_data_i;
@@ -117,25 +117,125 @@ module execute_stage #(
     logic upper_immediate [IMMEDIATE_WIDTH - 1:0];
     assign upper_immediate = immediate_data << 12;
 
-    logic lhs;
+    logic [DATA_WIDTH - 1:0] lhs;
     logic lhs_valid;
 
-    logic rhs;
+    logic [DATA_WIDTH - 1:0] rhs;
     logic rhs_valid;
+
+    logic [14:12] operation, // funct3
+    logic operation_valid,
     
-    logic arithmetic_code_valid;
+    logic [31:25] metadata, // funct7, or imm[11:5] if applicable (otherwise zero)
+    logic metadata_valid,
+    
+    logic arithmetic_code_legal;
 
     arithmetic arithmetic (
-        .lhs ( register_1_data_i ),
-        .lhs_valid ( register_1_data_valid_i ),
+        .lhs ( lhs ),
+        .lhs_valid ( lhs_valid ),
 
-        .rhs ( register_2_data_i ),
-        .rhs_valid ( register_2_data_valid_i ),
+        .rhs ( rhs ),
+        .rhs_valid ( rhs_valid ),
+
+        .operation ( operation ),
+        .operation_valid ( operation_valid ),
+
+        .metadata ( metadata ),
+        .metadata_valid ( metadata_valid ),
 
         .result ( result_data ),
-        .arithmetic_code_valid ( arithmetic_code_valid ), // should result in an exception
+        .arithmetic_code_legal ( arithmetic_code_legal ), // should result in an exception
         .result_valid ( result_data_valid )
     );
+
+    always_comb begin
+        if (register_arith_i) begin
+            lhs = register_1_data_i;
+            lhs_valid = register_1_data_valid_i;
+
+            rhs = register_2_data_i;
+            rhs_valid = register_2_data_valid_i;
+
+            operation = funct_3_i;
+            operation_valid = funct_3_valid_i;
+
+            metadata = funct_7_i;
+            metadata_valid = funct_7_valid_i;
+        end else if (immediate_arith_i) begin
+            lhs = register_1_data_i;
+            lhs_valid = register_1_data_valid_i;
+
+            rhs = immediate_data_i;
+            rhs_valid = immediate_data_valid_i;
+
+            operation = funct_3_i;
+            operation_valid = funct_3_valid_i;
+
+            metadata = funct_7_i;
+            metadata_valid = funct_7_valid_i;
+        end else if (load_i || store_i) begin
+            lhs = register_1_data_i;
+            lhs_valid = register_1_data_valid_i;
+
+            rhs = immediate_data_i;
+            rhs_valid = immediate_data_valid_i;
+
+            operation = 3'h0; // addition
+            operation_valid = '1;
+
+            metadata = 7'h00;
+            metadata_valid = '1;
+        end else if (immediate_jump_i || register_jump_i) begin
+            lhs = program_count_i;
+            lhs_valid = program_count_valid_i;
+
+            rhs = 32'h0000_0004;
+            rhs_valid = '1;
+
+            operation = 3'h0; // addition
+            operation_valid = '1;
+
+            metadata = 7'h00;
+            metadata_valid = '1;
+        end else if (load_upper_i) begin
+            lhs = upper_immediate;
+            lhs_valid = immediate_data_valid_i;
+
+            rhs = 32'h0000_0000;
+            rhs_valid = '1;
+
+            operation = 3'h0; // addition
+            operation_valid = '1;
+
+            metadata = 7'h00;
+            metadata_valid = '1;
+        end else if (load_upper_pc_i) begin
+            lhs = upper_immediate;
+            lhs_valid = immediate_data_valid_i;
+
+            rhs = program_count_i;
+            rhs_valid = program_count_valid_i;
+
+            operation = 3'h0; // addition
+            operation_valid = '1;
+
+            metadata = 7'h00;
+            metadata_valid = '1;
+        end else begin
+            lhs = 'X;
+            lhs_valid = '0;
+
+            rhs = 'X;
+            rhs_valid = '0;
+
+            operation = 'X;
+            operation_valid = '0;
+
+            metadata = 'X;
+            metadata_valid = '0;
+        end
+    end
 
     // transfer logic
     logic transfer_prev;
@@ -146,9 +246,9 @@ module execute_stage #(
         transfer_prev = prev_done && !stall_prev;
         transfer_next = done_next && !next_stall;
 
-        stall_prev = has_input && !transfer_next;
+        stall_prev = rst || (has_input && !transfer_next);
 
-        done_next = has_input; // purely combinational (untill we implement multiplication and division)
+        done_next = !rst && has_input; // single-cycle (until we implement multiplication and division)
     end
 
     always_ff @(posedge clk) if (rst) begin
@@ -171,7 +271,7 @@ module execute_stage #(
                 load_upper_i <= load_upper;
                 load_upper_pc_i <= load_upper_pc;
                 environment_i <= environment;
-                opcode_valid_i <= opcode_valid;
+                opcode_legal_i <= opcode_legal;
                 immediate_data_i <= immediate_data;
                 immediate_data_valid_i <= immediate_data_valid;
                 register_1_data_i <= register_1_data;
