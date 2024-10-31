@@ -150,7 +150,7 @@ module memory_stage #(
     endcase
 
     logic [31:0] load_data;
-    always_comb unique case (funct_3)
+    always_comb unique case (funct_3_i)
         3'h0 : load_data = $signed(fetched_data[7:0]); // byte
         3'h1 : load_data = $signed(fetched_data[15:0]); // half
         3'h2 : load_data = fetched_data; // word
