@@ -409,7 +409,7 @@ module five_cycle_cpu (
     logic [31:0] jump_target;
 
     always_comb begin
-        program_count_done = !rst && !queued_program_count;
+        program_count_done = !rst && queued_program_count;
         start_program_count = program_count_done && !fetch_stall;
         
         program_count_stall = rst;

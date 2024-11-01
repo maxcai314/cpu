@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="five_cycle_cpu_test_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="five_cycle_cpu_test" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="123.801 ns"></ZoomEndTime>
+      <Cursor1Time time="64.800 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="146"></NameColumnWidth>
+      <ValueColumnWidth column_width="60"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="24" />
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/rst">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/fetch_stall">
+      <obj_property name="ElementShortName">fetch_stall</obj_property>
+      <obj_property name="ObjectShortName">fetch_stall</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/fetch_stage/has_input">
+      <obj_property name="ElementShortName">has_input</obj_property>
+      <obj_property name="ObjectShortName">has_input</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/program_count">
+      <obj_property name="ElementShortName">program_count[31:0]</obj_property>
+      <obj_property name="ObjectShortName">program_count[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/fetch_instruction_data">
+      <obj_property name="ElementShortName">fetch_instruction_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fetch_instruction_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/decode_stall">
+      <obj_property name="ElementShortName">decode_stall</obj_property>
+      <obj_property name="ObjectShortName">decode_stall</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/decode_stage/has_input">
+      <obj_property name="ElementShortName">has_input</obj_property>
+      <obj_property name="ObjectShortName">has_input</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/decode_stage/done_next">
+      <obj_property name="ElementShortName">done_next</obj_property>
+      <obj_property name="ObjectShortName">done_next</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/decode_stage/transfer_next">
+      <obj_property name="ElementShortName">transfer_next</obj_property>
+      <obj_property name="ObjectShortName">transfer_next</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/decode_stage/next_stall">
+      <obj_property name="ElementShortName">next_stall</obj_property>
+      <obj_property name="ObjectShortName">next_stall</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/decode_immediate_data">
+      <obj_property name="ElementShortName">decode_immediate_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">decode_immediate_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/control_flow_affected">
+      <obj_property name="ElementShortName">control_flow_affected</obj_property>
+      <obj_property name="ObjectShortName">control_flow_affected</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/jump_target">
+      <obj_property name="ElementShortName">jump_target[31:0]</obj_property>
+      <obj_property name="ObjectShortName">jump_target[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/execute_stall">
+      <obj_property name="ElementShortName">execute_stall</obj_property>
+      <obj_property name="ObjectShortName">execute_stall</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/execute_stage/has_input">
+      <obj_property name="ElementShortName">has_input</obj_property>
+      <obj_property name="ObjectShortName">has_input</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/execute_result_data">
+      <obj_property name="ElementShortName">execute_result_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">execute_result_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/memory_stall">
+      <obj_property name="ElementShortName">memory_stall</obj_property>
+      <obj_property name="ObjectShortName">memory_stall</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/memory_result_data">
+      <obj_property name="ElementShortName">memory_result_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">memory_result_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/writeback_stall">
+      <obj_property name="ElementShortName">writeback_stall</obj_property>
+      <obj_property name="ObjectShortName">writeback_stall</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/writeback_stage/write_data">
+      <obj_property name="ElementShortName">write_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/registers/data[10]">
+      <obj_property name="ElementShortName">[10][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[10][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/registers/data[11]">
+      <obj_property name="ElementShortName">[11][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[11][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/registers/data[12]">
+      <obj_property name="ElementShortName">[12][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[12][31:0]</obj_property>
+   </wvobject>
+</wave_config>
