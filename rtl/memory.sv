@@ -29,12 +29,12 @@ module memory #(
     
     logic write_timer; // simulation: only write on every other cycle
     
-    always_ff @(posedge clk) if (rst) begin
-        write_timer <= '1;
-    end
-    
-    always_ff @(posedge clk) if (!rst) begin
-        write_timer <= !write_timer;
+    always_ff @(posedge clk) begin
+        if (rst) begin
+            write_timer <= '1;
+        end else begin
+            write_timer <= !write_timer;
+        end
     end
     
     // todo: use realistic memory; also see if fetch failed
