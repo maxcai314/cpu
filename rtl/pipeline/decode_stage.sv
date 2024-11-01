@@ -147,11 +147,11 @@ module decode_stage #(
         .lhs( register_1_data_out ),
         .lhs_valid( register_1_data_valid_out ),
 
-        .rhs( register_2_data ),
-        .rhs_valid( register_2_data_valid ),
+        .rhs( register_2_data_out ),
+        .rhs_valid( register_2_data_valid_out ),
 
-        .operation( funct_3 ),
-        .operation_valid( funct_3_valid ),
+        .operation( funct_3_out ),
+        .operation_valid( funct_3_valid_out ),
 
         .branch_condition( branch_condition ),
         .branch_code_legal( branch_code_legal ), // should result in exception
