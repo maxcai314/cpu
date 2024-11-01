@@ -12,14 +12,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="123.801 ns"></ZoomEndTime>
-      <Cursor1Time time="64.800 ns"></Cursor1Time>
+      <ZoomEndTime time="574.001 ns"></ZoomEndTime>
+      <Cursor1Time time="237.500 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="146"></NameColumnWidth>
+      <NameColumnWidth column_width="138"></NameColumnWidth>
       <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="24" />
+   <WVObjectSize size="18" />
    <wvobject type="logic" fp_name="/five_cycle_cpu_test/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -32,10 +32,6 @@
       <obj_property name="ElementShortName">fetch_stall</obj_property>
       <obj_property name="ObjectShortName">fetch_stall</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/fetch_stage/has_input">
-      <obj_property name="ElementShortName">has_input</obj_property>
-      <obj_property name="ObjectShortName">has_input</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/program_count">
       <obj_property name="ElementShortName">program_count[31:0]</obj_property>
       <obj_property name="ObjectShortName">program_count[31:0]</obj_property>
@@ -47,22 +43,6 @@
    <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/decode_stall">
       <obj_property name="ElementShortName">decode_stall</obj_property>
       <obj_property name="ObjectShortName">decode_stall</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/decode_stage/has_input">
-      <obj_property name="ElementShortName">has_input</obj_property>
-      <obj_property name="ObjectShortName">has_input</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/decode_stage/done_next">
-      <obj_property name="ElementShortName">done_next</obj_property>
-      <obj_property name="ObjectShortName">done_next</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/decode_stage/transfer_next">
-      <obj_property name="ElementShortName">transfer_next</obj_property>
-      <obj_property name="ObjectShortName">transfer_next</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/decode_stage/next_stall">
-      <obj_property name="ElementShortName">next_stall</obj_property>
-      <obj_property name="ObjectShortName">next_stall</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/decode_immediate_data">
       <obj_property name="ElementShortName">decode_immediate_data[31:0]</obj_property>
@@ -79,10 +59,6 @@
    <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/execute_stall">
       <obj_property name="ElementShortName">execute_stall</obj_property>
       <obj_property name="ObjectShortName">execute_stall</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/five_cycle_cpu_test/cpu/execute_stage/has_input">
-      <obj_property name="ElementShortName">has_input</obj_property>
-      <obj_property name="ObjectShortName">has_input</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/five_cycle_cpu_test/cpu/execute_result_data">
       <obj_property name="ElementShortName">execute_result_data[31:0]</obj_property>

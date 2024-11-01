@@ -79,7 +79,7 @@ module writeback_stage #(
 
     assign write_activate = register_arith_i || immediate_arith_i || load_i
                                 || immediate_jump_i || register_jump_i
-                                || load_upper_i || load_upper_pc_i || opcode_legal_i;
+                                || load_upper_i || load_upper_pc_i;
     
     assign write_register = write_register_i;
     assign write_data = result_data_i; // assert that all this is valid when write_activate

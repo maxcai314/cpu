@@ -27,20 +27,20 @@ module memory #(
 
     logic [7:0] data [MEM_BYTE_SIZE];
     
-    logic write_timer; // simulation: only write on every other cycle
+    logic [3:0] write_timer; // simulation: only write on every 16th cycle
     
     always_ff @(posedge clk) begin
         if (rst) begin
-            write_timer <= '1;
+            write_timer <= '0;
         end else begin
-            write_timer <= !write_timer;
+            write_timer <= write_timer + 1;
         end
     end
     
     // todo: use realistic memory; also see if fetch failed
     assign instruction_fetch_done = '1;
     assign fetch_done = '1;
-    assign write_done = write_activate && write_timer; // whether or not the write will happen next cycle
+    assign write_done = write_activate && (write_timer == 0); // whether or not the write will happen next cycle
     
     always_ff @(posedge clk) if (rst) begin
 //        for (logic [ADDR_WIDTH - 1:0] i=0; i<MEM_BYTE_SIZE; i++)
