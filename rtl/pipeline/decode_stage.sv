@@ -147,11 +147,11 @@ module decode_stage #(
         .lhs( register_1_data_out ),
         .lhs_valid( register_1_data_valid_out ),
 
-        .rhs( register_2_data_out ),
-        .rhs_valid( register_2_data_valid_out ),
+        .rhs( register_2_data ),
+        .rhs_valid( register_2_data_valid ),
 
-        .operation( funct_3_out ),
-        .operation_valid( funct_3_valid_out ),
+        .operation( funct_3 ),
+        .operation_valid( funct_3_valid ),
 
         .branch_condition( branch_condition ),
         .branch_code_legal( branch_code_legal ), // should result in exception
@@ -184,12 +184,11 @@ module decode_stage #(
     logic has_input;
 
     always_comb begin
-        transfer_prev = prev_done && !stall_prev;
+        done_next = !rst && has_input && !register_1_stall && !register_2_stall;
         transfer_next = done_next && !next_stall;
 
         stall_prev = rst || (has_input && !transfer_next);
-
-        done_next = !rst && has_input && !register_1_stall && !register_2_stall;
+        transfer_prev = prev_done && !stall_prev;
     end
 
     always_ff @(posedge clk) if (rst) begin
