@@ -316,6 +316,17 @@ module five_cycle_cpu (
         .prev_done ( execute_done ),
         .next_stall ( writeback_stall ),
         .done_next ( memory_done ),
+        
+        .write_addr ( memory_write_addr ),
+        .write_data ( memory_write_data ),
+        .write_activate ( memory_write_activate ),
+        .bytes_to_write ( memory_bytes_to_write ),
+        .write_done ( memory_write_done ),
+
+        .fetch_addr ( memory_fetch_addr ),
+        .fetch_activate ( memory_fetch_activate ),
+        .fetched_data ( memory_fetched_data ),
+        .fetch_done ( memory_fetch_done ),
 
         .program_count_in ( execute_program_count ),
         .program_count_valid_in ( execute_program_count_valid ),
