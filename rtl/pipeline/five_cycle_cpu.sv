@@ -41,10 +41,10 @@ module five_cycle_cpu (
         .write_done ( register_write_done )
     );
 
-    logic [31:0] memory_instruction_fetch_addr;
-    logic memory_instruction_fetch_activate; // unused for now
-    logic [31:0] memory_instruction_data;
-    logic memory_instruction_fetch_done;
+    logic [31:0] ram_instruction_fetch_addr;
+    logic ram_instruction_fetch_activate; // unused for now
+    logic [31:0] ram_instruction_data;
+    logic ram_instruction_fetch_done;
 
     logic [31:0] memory_fetch_addr;
     logic memory_fetch_activate;
@@ -61,7 +61,7 @@ module five_cycle_cpu (
         .clk ( clk ),
         .rst ( rst ),
         
-        .instruction_addr ( memory_instruction_fetch_addr ),
+        .instruction_addr ( ram_instruction_fetch_addr ),
         .fetch_addr ( memory_fetch_addr ),
         
         .bytes_to_write ( memory_bytes_to_write ),
@@ -70,8 +70,8 @@ module five_cycle_cpu (
         .write_activate ( memory_write_activate ),
         .write_done ( memory_write_done ),
         
-        .instruction_data ( memory_instruction_data ),
-        .instruction_fetch_done ( memory_instruction_fetch_done ), // todo: implement in memory handler
+        .instruction_data ( ram_instruction_data ),
+        .instruction_fetch_done ( ram_instruction_fetch_done ), // todo: implement in memory handler
         
         .fetched_data ( memory_fetched_data ),
         .fetch_done ( memory_fetch_done )
@@ -101,17 +101,14 @@ module five_cycle_cpu (
         .next_stall ( decode_stall ),
         .done_next ( fetch_done ),
 
-        .instruction_addr ( memory_instruction_fetch_addr ),
-        .instruction_fetch_activate ( memory_instruction_fetch_activate ),
-        .instruction_data ( memory_instruction_data ),
-        .instruction_data_fetch_done ( memory_instruction_fetch_done ),
+        .instruction_addr ( ram_instruction_fetch_addr ),
+        .instruction_fetch_activate ( ram_instruction_fetch_activate ),
+        .instruction_data ( ram_instruction_data ),
+        .instruction_fetch_done ( ram_instruction_fetch_done ),
         
         .program_count_in ( program_count ),
         .program_count_valid_in ( program_count_valid ),
-        
-        .instruction_data ( memory_fetched_data ),
-        .instruction_fetch_done ( memory_fetch_done ),
-        
+
         .program_count_out ( fetch_program_count ),
         .program_count_valid_out ( fetch_program_count_valid ),
         .instruction_data_out ( fetch_instruction_data ),
