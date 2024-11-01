@@ -39,23 +39,24 @@ module fetch_stage #(
     assign program_count_out = program_count_i;
     assign program_count_valid_out = program_count_valid_i;
 
+    always_comb begin
+        instruction_addr = program_count_i;
+        instruction_fetch_activate = has_input;
+        instruction_data_out = instruction_data;
+        instruction_data_valid_out = instruction_fetch_done;
+    end
+
     // transfer logic
     logic transfer_prev;
     logic transfer_next;
     logic has_input;
 
     always_comb begin
-        transfer_prev = prev_done && !stall_prev;
+        done_next = !rst && has_input && instruction_fetch_done;
         transfer_next = done_next && !next_stall;
 
         stall_prev = rst || (has_input && !transfer_next);
-
-        done_next = !rst && has_input && instruction_fetch_done;
-
-        instruction_addr = program_count_i;
-        instruction_fetch_activate = has_input;
-        instruction_data_out = instruction_data;
-        instruction_data_valid_out = instruction_fetch_done;
+        transfer_prev = prev_done && !stall_prev;
     end
 
     // todo: prevent multiple fetches/refetching the same thing if stalled

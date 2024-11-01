@@ -167,13 +167,6 @@ module memory_stage #(
     logic has_input;
 
     always_comb begin
-        transfer_prev = prev_done && !stall_prev;
-        transfer_next = done_next && !next_stall;
-
-        stall_prev = rst || (has_input && !transfer_next);
-    end
-
-    always_comb begin
         if (store_i) begin
             done_next = !rst && has_input && write_done;
             result_data_out = 'X;
@@ -187,6 +180,13 @@ module memory_stage #(
             result_data_out = result_data_i;
             result_data_valid_out = result_data_valid_i;
         end
+    end
+
+    always_comb begin
+        transfer_next = done_next && !next_stall;
+
+        stall_prev = rst || (has_input && !transfer_next);
+        transfer_prev = prev_done && !stall_prev;
     end
 
     always_ff @(posedge clk) if (rst) begin

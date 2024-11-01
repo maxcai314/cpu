@@ -90,11 +90,11 @@ module writeback_stage #(
     logic has_input;
 
     always_comb begin
-        transfer_prev = prev_done && !stall_prev;
+        done_next = !rst && has_input; // register writing doesn't stall
         transfer_next = done_next && !next_stall;
 
         stall_prev = rst || (has_input && !transfer_next);
-        done_next = !rst && has_input; // register writing doesn't stall
+        transfer_prev = prev_done && !stall_prev;
     end
 
     always_ff @(posedge clk) if (rst) begin
