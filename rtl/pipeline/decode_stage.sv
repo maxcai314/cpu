@@ -169,8 +169,8 @@ module decode_stage #(
             jump_target_valid = program_count_valid_i && immediate_data_valid_out;
         end else if (register_jump_out) begin
             control_flow_affected = '1;
-            jump_target = register_1_data + immediate_data_out;
-            jump_target_valid = register_1_data_valid && immediate_data_valid_out;
+            jump_target = register_1_data_out + immediate_data_out;
+            jump_target_valid = register_1_data_valid_out && immediate_data_valid_out;
         end else begin
             control_flow_affected = '0;
             jump_target = 'X;
