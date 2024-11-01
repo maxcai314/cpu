@@ -16,7 +16,7 @@ module decode_stage #(
     input logic prev_done, // comes from previous stage
 
     input logic next_stall, // comes from next stage
-    input logic done_next, // dictates next stage
+    output logic done_next, // dictates next stage
 
     // register interactions
     output logic [REGISTER_INDEXING_WIDTH - 1:0] register_read_1,
@@ -121,7 +121,7 @@ module decode_stage #(
         .funct_3_valid ( funct_3_valid_out )
     );
 
-    assign immediate_data_valid = instruction_data_valid && immediate_valid;
+    assign immediate_data_valid_out = instruction_data_valid_i && immediate_valid;
 
     assign program_count_out = program_count_i;
     assign program_count_valid_out = program_count_valid_i;
@@ -130,12 +130,12 @@ module decode_stage #(
     logic register_2_stall;
     
     always_comb begin
-        register_1_data = register_read_1_data;
-        register_1_data_valid = register_1_valid && !register_read_1_contended;
+        register_1_data_out = register_read_1_data;
+        register_1_data_valid_out = register_1_valid && !register_read_1_contended;
         register_1_stall = register_1_valid && register_read_1_contended;
 
-        register_2_data = register_read_2_data;
-        register_2_data_valid = register_2_valid && !register_read_2_contended;
+        register_2_data_out = register_read_2_data;
+        register_2_data_valid_out = register_2_valid && !register_read_2_contended;
         register_2_stall = register_2_valid && register_read_2_contended;
     end
 
@@ -144,8 +144,8 @@ module decode_stage #(
     logic branch_valid;
 
     branching branching (
-        .lhs( register_1_data ),
-        .lhs_valid( register_1_data_valid ),
+        .lhs( register_1_data_out ),
+        .lhs_valid( register_1_data_valid_out ),
 
         .rhs( register_2_data ),
         .rhs_valid( register_2_data_valid ),
@@ -159,18 +159,18 @@ module decode_stage #(
     );
 
     always_comb begin
-        if (branch) begin
+        if (branch_out) begin
             control_flow_affected = branch_condition;
-            jump_target = program_count_i + immediate_data;
-            jump_target_valid = program_count_valid_i && branch_valid && immediate_valid;
-        end else if (immediate_jump) begin
+            jump_target = program_count_i + immediate_data_out;
+            jump_target_valid = program_count_valid_i && branch_valid && immediate_data_valid_out;
+        end else if (immediate_jump_out) begin
             control_flow_affected = '1;
-            jump_target = program_count_i + immediate_data;
-            jump_target_valid = program_count_valid_i && immediate_valid;
-        end else if (register_jump) begin
+            jump_target = program_count_i + immediate_data_out;
+            jump_target_valid = program_count_valid_i && immediate_data_valid_out;
+        end else if (register_jump_out) begin
             control_flow_affected = '1;
-            jump_target = register_1_data + immediate_data;
-            jump_target_valid = register_1_data_valid && immediate_valid;
+            jump_target = register_1_data + immediate_data_out;
+            jump_target_valid = register_1_data_valid && immediate_data_valid_out;
         end else begin
             control_flow_affected = '0;
             jump_target = 'X;

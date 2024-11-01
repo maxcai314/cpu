@@ -18,7 +18,7 @@ module memory_stage #(
     input logic prev_done, // comes from previous stage
 
     input logic next_stall, // comes from next stage
-    input logic done_next, // dictates next stage
+    output logic done_next, // dictates next stage
 
     // global interactions
     output logic [ADDR_WIDTH - 1:0] write_addr,
