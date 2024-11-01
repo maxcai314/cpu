@@ -16,7 +16,7 @@ module execute_stage #(
     input logic prev_done, // comes from previous stage
 
     input logic next_stall, // comes from next stage
-    input logic done_next, // dictates next stage
+    output logic done_next, // dictates next stage
 
     // global interactions
     // ...
@@ -85,7 +85,7 @@ module execute_stage #(
     output logic write_register_valid_out,
 
     output logic [DATA_WIDTH - 1:0] result_data_out, // register result or effective address
-    output logic result_data_valid_out,
+    output logic result_data_valid_out
 );
 
     // internal copy of inputs
@@ -140,8 +140,8 @@ module execute_stage #(
         memory_store_data_valid_out = register_2_data_valid_i && store_i;
     end
 
-    logic upper_immediate [IMMEDIATE_WIDTH - 1:0];
-    assign upper_immediate = immediate_data << 12;
+    logic [IMMEDIATE_WIDTH - 1:0] upper_immediate;
+    assign upper_immediate = immediate_data_i << 12;
 
     logic [DATA_WIDTH - 1:0] lhs;
     logic lhs_valid;
@@ -149,11 +149,11 @@ module execute_stage #(
     logic [DATA_WIDTH - 1:0] rhs;
     logic rhs_valid;
 
-    logic [14:12] operation, // funct3
-    logic operation_valid,
+    logic [14:12] operation; // funct3
+    logic operation_valid;
     
-    logic [31:25] metadata, // funct7, or imm[11:5] if applicable (otherwise zero)
-    logic metadata_valid,
+    logic [31:25] metadata; // funct7, or imm[11:5] if applicable (otherwise zero)
+    logic metadata_valid;
     
     logic arithmetic_code_legal;
 

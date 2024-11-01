@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module cpu_test(
+module five_cycle_cpu_test(
 
 );
 

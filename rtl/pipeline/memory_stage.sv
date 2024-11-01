@@ -85,7 +85,7 @@ module memory_stage #(
     output logic write_register_valid_out,
 
     output logic [DATA_WIDTH - 1:0] result_data_out, // register result or effective address
-    output logic result_data_valid_out,
+    output logic result_data_valid_out
 );
 
     // internal copy of inputs

@@ -16,7 +16,7 @@ module arithmetic #(
     input logic metadata_valid,
     
     output logic [DATA_WIDTH -1:0] result,
-    output logic arithmetic_code_legal
+    output logic arithmetic_code_legal,
     output logic result_valid
 );
 
