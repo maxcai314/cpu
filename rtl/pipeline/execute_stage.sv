@@ -170,9 +170,9 @@ module execute_stage #(
         .metadata ( metadata ),
         .metadata_valid ( metadata_valid ),
 
-        .result ( result_data ),
+        .result ( result_data_out ),
         .arithmetic_code_legal ( arithmetic_code_legal ), // should result in an exception
-        .result_valid ( result_data_valid )
+        .result_valid ( result_data_valid_out )
     );
 
     always_comb begin

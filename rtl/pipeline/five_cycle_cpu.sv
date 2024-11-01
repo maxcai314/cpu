@@ -141,7 +141,7 @@ module five_cycle_cpu (
     logic decode_register_1_data_valid;
     logic [31:0] decode_register_2_data;
     logic decode_register_2_data_valid;
-    logic [31:0] decode_write_register;
+    logic [4:0] decode_write_register;
     logic decode_write_register_valid;
     logic [31:25] decode_funct_7;
     logic decode_funct_7_valid;
