@@ -142,7 +142,7 @@ module five_cycle_cpu (
     logic [31:0] decode_register_2_data;
     logic decode_register_2_data_valid;
     logic [4:0] decode_write_register;
-    logic decode_write_register_valid;
+    logic decode_writeback_enabled;
     logic [31:25] decode_funct_7;
     logic decode_funct_7_valid;
     logic [14:12] decode_funct_3;
@@ -193,7 +193,7 @@ module five_cycle_cpu (
         .register_2_data_out ( decode_register_2_data ),
         .register_2_data_valid_out ( decode_register_2_data_valid ),
         .write_register_out ( decode_write_register ),
-        .write_register_valid_out ( decode_write_register_valid ),
+        .writeback_enabled_out ( decode_writeback_enabled ),
         .funct_7_out ( decode_funct_7 ),
         .funct_7_valid_out ( decode_funct_7_valid ),
         .funct_3_out ( decode_funct_3 ),
@@ -223,7 +223,7 @@ module five_cycle_cpu (
     logic [31:0] execute_memory_store_data;
     logic execute_memory_store_data_valid;
     logic [4:0] execute_write_register;
-    logic execute_write_register_valid;
+    logic execute_writeback_enabled;
     logic [31:0] execute_result_data;
     logic execute_result_data_valid;
 
@@ -256,7 +256,7 @@ module five_cycle_cpu (
         .register_2_data_in ( decode_register_2_data ),
         .register_2_data_valid_in ( decode_register_2_data_valid ),
         .write_register_in ( decode_write_register ),
-        .write_register_valid_in ( decode_write_register_valid ),
+        .writeback_enabled_in ( decode_writeback_enabled ),
         .funct_7_in ( decode_funct_7 ),
         .funct_7_valid_in ( decode_funct_7_valid ),
         .funct_3_in ( decode_funct_3 ),
@@ -282,7 +282,7 @@ module five_cycle_cpu (
         .memory_store_data_out ( execute_memory_store_data ),
         .memory_store_data_valid_out ( execute_memory_store_data_valid ),
         .write_register_out ( execute_write_register ),
-        .write_register_valid_out ( execute_write_register_valid ),
+        .writeback_enabled_out ( execute_writeback_enabled ),
         .result_data_out ( execute_result_data ),
         .result_data_valid_out ( execute_result_data_valid )
     );
@@ -304,7 +304,7 @@ module five_cycle_cpu (
     logic memory_environment;
     logic memory_opcode_legal;
     logic [4:0] memory_write_register;
-    logic memory_write_register_valid;
+    logic memory_writeback_enabled;
     logic [31:0] memory_result_data;
     logic memory_result_data_valid;
 
@@ -348,7 +348,7 @@ module five_cycle_cpu (
         .memory_store_data_in ( execute_memory_store_data ),
         .memory_store_data_valid_in ( execute_memory_store_data_valid ),
         .write_register_in ( execute_write_register ),
-        .write_register_valid_in ( execute_write_register_valid ),
+        .writeback_enabled_in ( execute_writeback_enabled ),
         .result_data_in ( execute_result_data ),
         .result_data_valid_in ( execute_result_data_valid ),
 
@@ -366,7 +366,7 @@ module five_cycle_cpu (
         .environment_out ( memory_environment ),
         .opcode_legal_out ( memory_opcode_legal ),
         .write_register_out ( memory_write_register ),
-        .write_register_valid_out ( memory_write_register_valid ),
+        .writeback_enabled_out ( memory_writeback_enabled ),
         .result_data_out ( memory_result_data ),
         .result_data_valid_out ( memory_result_data_valid )
     );
@@ -404,7 +404,7 @@ module five_cycle_cpu (
         .environment_in ( memory_environment ),
         .opcode_legal_in ( memory_opcode_legal ),
         .write_register_in ( memory_write_register ),
-        .write_register_valid_in ( memory_write_register_valid ),
+        .writeback_enabled_in ( memory_writeback_enabled ),
         .result_data_in ( memory_result_data ),
         .result_data_valid_in ( memory_result_data_valid ),
 

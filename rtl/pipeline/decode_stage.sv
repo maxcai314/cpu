@@ -65,7 +65,7 @@ module decode_stage #(
     output logic register_2_data_valid_out,
     
     output logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_out,
-    output logic write_register_valid_out,
+    output logic writeback_enabled_out,
     
     output logic [31:25] funct_7_out,
     output logic funct_7_valid_out,
@@ -112,7 +112,7 @@ module decode_stage #(
         .register_2_valid ( register_2_valid ),
         
         .write_register ( write_register_out ),
-        .write_register_valid ( write_register_valid_out ),
+        .write_register_valid ( writeback_enabled_out ),
         
         .funct_7 ( funct_7_out ),
         .funct_7_valid ( funct_7_valid_out ),

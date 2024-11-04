@@ -59,7 +59,7 @@ module memory_stage #(
     input logic memory_store_data_valid_in,
 
     input logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_in,
-    input logic write_register_valid_in,
+    input logic writeback_enabled_in,
 
     input logic [DATA_WIDTH - 1:0] result_data_in, // register result or effective address
     input logic result_data_valid_in,
@@ -82,7 +82,7 @@ module memory_stage #(
     output logic opcode_legal_out,
 
     output logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_out,
-    output logic write_register_valid_out,
+    output logic writeback_enabled_out,
 
     output logic [DATA_WIDTH - 1:0] result_data_out, // register result or effective address
     output logic result_data_valid_out
@@ -109,7 +109,7 @@ module memory_stage #(
     logic [DATA_WIDTH - 1:0] memory_store_data_i;
     logic memory_store_data_valid_i;
     logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_i;
-    logic write_register_valid_i;
+    logic writeback_enabled_i;
     logic [DATA_WIDTH - 1:0] result_data_i;
     logic result_data_valid_i;
 
@@ -129,7 +129,7 @@ module memory_stage #(
         environment_out = environment_i;
         opcode_legal_out = opcode_legal_i;
         write_register_out = write_register_i;
-        write_register_valid_out = write_register_valid_i;
+        writeback_enabled_out = writeback_enabled_i;
     end
 
     always_comb begin
@@ -217,7 +217,7 @@ module memory_stage #(
                 memory_store_data_i <= memory_store_data_in;
                 memory_store_data_valid_i <= memory_store_data_valid_in;
                 write_register_i <= write_register_in;
-                write_register_valid_i <= write_register_valid_in;
+                writeback_enabled_i <= writeback_enabled_in;
                 result_data_i <= result_data_in;
                 result_data_valid_i <= result_data_valid_in;
 

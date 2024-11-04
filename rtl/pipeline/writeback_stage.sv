@@ -41,7 +41,7 @@ module writeback_stage #(
     input logic opcode_legal_in,
 
     input logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_in,
-    input logic write_register_valid_in,
+    input logic writeback_enabled_in,
 
     input logic [DATA_WIDTH - 1:0] result_data_in, // register result or effective address
     input logic result_data_valid_in,
@@ -67,7 +67,7 @@ module writeback_stage #(
     logic environment_i;
     logic opcode_legal_i;
     logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_i;
-    logic write_register_valid_i;
+    logic writeback_enabled_i;
     logic [DATA_WIDTH - 1:0] result_data_i;
     logic result_data_valid_i;
 
@@ -76,10 +76,6 @@ module writeback_stage #(
         program_count_out = program_count_i;
         program_count_valid_out = program_count_valid_i;
     end
-
-    assign write_activate = register_arith_i || immediate_arith_i || load_i
-                                || immediate_jump_i || register_jump_i
-                                || load_upper_i || load_upper_pc_i;
     
     assign write_register = write_register_i;
     assign write_data = result_data_i; // assert that all this is valid when write_activate
@@ -88,6 +84,8 @@ module writeback_stage #(
     logic transfer_prev;
     logic transfer_next;
     logic has_input;
+
+    assign write_activate = writeback_enabled_i && has_input;
 
     always_comb begin
         done_next = !rst && has_input; // register writing doesn't stall
@@ -119,7 +117,7 @@ module writeback_stage #(
                 environment_i <= environment_in;
                 opcode_legal_i <= opcode_legal_in;
                 write_register_i <= write_register_in;
-                write_register_valid_i <= write_register_valid_in;
+                writeback_enabled_i <= writeback_enabled_in;
                 result_data_i <= result_data_in;
                 result_data_valid_i <= result_data_valid_in;
 

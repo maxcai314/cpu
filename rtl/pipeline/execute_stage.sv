@@ -47,7 +47,7 @@ module execute_stage #(
     input logic register_2_data_valid_in,
     
     input logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_in,
-    input logic write_register_valid_in,
+    input logic writeback_enabled_in,
     
     input logic [31:25] funct_7_in,
     input logic funct_7_valid_in,
@@ -82,7 +82,7 @@ module execute_stage #(
     output logic memory_store_data_valid_out,
 
     output logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_out,
-    output logic write_register_valid_out,
+    output logic writeback_enabled_out,
 
     output logic [DATA_WIDTH - 1:0] result_data_out, // register result or effective address
     output logic result_data_valid_out
@@ -109,7 +109,7 @@ module execute_stage #(
     logic [DATA_WIDTH - 1:0] register_2_data_i;
     logic register_2_data_valid_i;
     logic [REGISTER_INDEXING_WIDTH - 1:0] write_register_i;
-    logic write_register_valid_i;
+    logic writeback_enabled_i;
     logic [31:25] funct_7_i;
     logic funct_7_valid_i;
     logic [14:12] funct_3_i;
@@ -135,7 +135,7 @@ module execute_stage #(
         funct_3_out = funct_3_i;
         funct_3_valid_out = funct_3_valid_i;
         write_register_out = write_register_i;
-        write_register_valid_out = write_register_valid_i;
+        writeback_enabled_out = writeback_enabled_i;
         memory_store_data_out = register_2_data_i;
         memory_store_data_valid_out = register_2_data_valid_i && store_i;
     end
@@ -304,7 +304,7 @@ module execute_stage #(
                 register_2_data_i <= register_2_data_in;
                 register_2_data_valid_i <= register_2_data_valid_in;
                 write_register_i <= write_register_in;
-                write_register_valid_i <= write_register_valid_in;
+                writeback_enabled_i <= writeback_enabled_in;
                 funct_7_i <= funct_7_in;
                 funct_7_valid_i <= funct_7_valid_in;
                 funct_3_i <= funct_3_in;
