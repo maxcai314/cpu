@@ -19,7 +19,8 @@ module execute_stage #(
     output logic done_next, // dictates next stage
 
     // global interactions
-    // ...
+    output logic [REGISTER_INDEXING_WIDTH - 1:0] instruction_writeback_register,
+    output logic instruction_writeback_enabled,
 
     // pipeline inputs
     input logic [ADDR_WIDTH - 1:0] program_count_in,
@@ -275,6 +276,9 @@ module execute_stage #(
         stall_prev = rst || (has_input && !transfer_next);
         transfer_prev = prev_done && !stall_prev;
     end
+
+    assign instruction_writeback_register = write_register_i;
+    assign instruction_writeback_enabled = writeback_enabled_i && has_input;
 
     always_ff @(posedge clk) if (rst) begin
         has_input <= '0;

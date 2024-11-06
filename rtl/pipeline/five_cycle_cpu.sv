@@ -15,13 +15,26 @@ module five_cycle_cpu (
     logic register_read_1_contended;
     logic register_read_2_contended;
 
-    assign register_read_1_contended = '0;
-    assign register_read_2_contended = '0; // for now
-
     logic [4:0] write_register;
     logic [31:0] write_register_data;
     logic write_register_activate;
     logic register_write_done;
+
+    // instructions in these stages might cause hazards
+    logic [4:0] execute_stage_writeback_register;
+    logic execute_stage_writeback_enabled;
+    logic [4:0] memory_stage_writeback_register;
+    logic memory_stage_writeback_enabled;
+    
+    always_comb begin
+        register_read_1_contended = (write_register_activate && write_register == read_register_1)
+                                        || (execute_stage_writeback_enabled && execute_stage_writeback_register == read_register_1)
+                                        || (memory_stage_writeback_enabled && memory_stage_writeback_register == read_register_1);
+        
+        register_read_2_contended = (write_register_activate && write_register == read_register_2)
+                                        || (execute_stage_writeback_enabled && execute_stage_writeback_register == read_register_2)
+                                        || (memory_stage_writeback_enabled && memory_stage_writeback_register == read_register_2);
+    end
     
 
     registers registers (

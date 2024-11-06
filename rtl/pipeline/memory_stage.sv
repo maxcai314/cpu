@@ -21,6 +21,10 @@ module memory_stage #(
     output logic done_next, // dictates next stage
 
     // global interactions
+    output logic [REGISTER_INDEXING_WIDTH - 1:0] instruction_writeback_register,
+    output logic instruction_writeback_enabled,
+
+    // memory interactions
     output logic [ADDR_WIDTH - 1:0] write_addr,
     output logic [DATA_WIDTH - 1:0] write_data,
     output logic write_activate, // assert that write addr and data are valid when using this
@@ -181,6 +185,9 @@ module memory_stage #(
             result_data_valid_out = result_data_valid_i;
         end
     end
+
+    assign instruction_writeback_register = write_register_i;
+    assign instruction_writeback_enabled = writeback_enabled_i && has_input;
 
     always_comb begin
         transfer_next = done_next && !next_stall;
