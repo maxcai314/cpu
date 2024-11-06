@@ -481,12 +481,4 @@ module five_cycle_cpu (
             queued_program_count <= '1;
         end
     end
-
-    // todo: doesn't work when parallel yet
-    always_ff @(posedge clk) if (!rst) begin
-        if (decode_transfer) begin // todo: is && !execute_stall necessary?
-            control_flow_affected <= decode_control_flow_affected;
-            jump_target <= decode_jump_target;
-        end
-    end
 endmodule
