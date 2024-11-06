@@ -249,6 +249,9 @@ module five_cycle_cpu (
         .next_stall ( memory_stall ),
         .done_next ( execute_done ),
 
+        .instruction_writeback_register ( execute_stage_writeback_register ),
+        .instruction_writeback_enabled ( execute_stage_writeback_enabled ),
+
         .program_count_in ( decode_program_count ),
         .program_count_valid_in ( decode_program_count_valid ),
         .register_arith_in ( decode_register_arith ),
@@ -329,6 +332,9 @@ module five_cycle_cpu (
         .prev_done ( execute_done ),
         .next_stall ( writeback_stall ),
         .done_next ( memory_done ),
+
+        .instruction_writeback_register ( execute_stage_writeback_register ),
+        .instruction_writeback_enabled ( execute_stage_writeback_enabled ),
         
         .write_addr ( memory_write_addr ),
         .write_data ( memory_write_data ),
