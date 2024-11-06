@@ -333,8 +333,8 @@ module five_cycle_cpu (
         .next_stall ( writeback_stall ),
         .done_next ( memory_done ),
 
-        .instruction_writeback_register ( execute_stage_writeback_register ),
-        .instruction_writeback_enabled ( execute_stage_writeback_enabled ),
+        .instruction_writeback_register ( memory_stage_writeback_register ),
+        .instruction_writeback_enabled ( memory_stage_writeback_enabled ),
         
         .write_addr ( memory_write_addr ),
         .write_data ( memory_write_data ),
