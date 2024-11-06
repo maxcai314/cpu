@@ -39,17 +39,17 @@ module fetch_stage #(
     assign program_count_out = program_count_i;
     assign program_count_valid_out = program_count_valid_i;
 
+    // transfer logic
+    logic transfer_prev;
+    logic transfer_next;
+    logic has_input;
+
     always_comb begin
         instruction_addr = program_count_i;
         instruction_fetch_activate = has_input;
         instruction_data_out = instruction_data;
         instruction_data_valid_out = instruction_fetch_done;
     end
-
-    // transfer logic
-    logic transfer_prev;
-    logic transfer_next;
-    logic has_input;
 
     always_comb begin
         done_next = !rst && has_input && instruction_fetch_done;
