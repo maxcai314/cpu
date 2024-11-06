@@ -5,6 +5,9 @@ module five_cycle_cpu (
     input logic clk,
     input logic rst
 );
+    logic fetch_stage_rst;
+    logic control_flow_affected;
+    assign fetch_stage_rst = rst || control_flow_affected;
     
     logic [4:0] read_register_1;
     logic [4:0] read_register_2;
@@ -106,7 +109,7 @@ module five_cycle_cpu (
 
     fetch_stage fetch_stage (
         .clk ( clk ),
-        .rst ( rst ),
+        .rst ( fetch_stage_rst ),
 
         .stall_prev ( fetch_stall ),
         .prev_done ( program_count_done ),
@@ -435,12 +438,34 @@ module five_cycle_cpu (
     logic start_program_count; // whether we will transfer a program count into pipeline
     logic finish_program_count; // whether we will transfer a program count out of pipeline
 
-    logic control_flow_affected;
-    logic [31:0] jump_target;
+    // flush pipeline if change
+    logic decode_transfer;
+    assign decode_transfer = decode_done && !execute_stall;
+    assign control_flow_affected = decode_transfer && decode_control_flow_affected;
+
+    always_comb begin
+        if (queued_program_count) begin
+            if (control_flow_affected) begin
+                program_count = decode_jump_target;
+                program_count_valid = decode_jump_target_valid;
+                program_count_done = !rst;
+            end else begin
+                program_count = writeback_program_count + 32'h0000_0004;
+                program_count_valid = writeback_program_count_valid;
+                program_count_done = writeback_done;
+            end
+        end else begin
+            program_count = 32'h0000_0000;
+            program_count_valid = '1;
+            program_count_done = !rst;
+        end
+    end
+
+    assign program_count_stall = '0; // todo: does this actually make sense
 
     always_comb begin
         program_count_done = !rst && queued_program_count;
-        start_program_count = program_count_done && !fetch_stall;
+        start_program_count = !rst && !fetch_stall;
         
         program_count_stall = rst;
 
@@ -448,31 +473,18 @@ module five_cycle_cpu (
     end
 
     always_ff @(posedge clk) if (rst) begin
-        program_count <= '0;
-        queued_program_count <= '1;
+        queued_program_count <= '0;
     end
 
     always_ff @(posedge clk) if (!rst) begin
         if (start_program_count) begin
-            queued_program_count <= '0;
-        end
-    end
-
-    always_ff @(posedge clk) if (!rst) begin
-        if (finish_program_count) begin
-            if (!control_flow_affected) begin
-                program_count <= writeback_program_count + 32'h0000_0004;
-                queued_program_count <= '1;
-            end else begin
-                program_count <= jump_target;
-                queued_program_count <= '1;
-            end
+            queued_program_count <= '1;
         end
     end
 
     // todo: doesn't work when parallel yet
     always_ff @(posedge clk) if (!rst) begin
-        if (decode_done && !execute_stall) begin // todo: is && !execute_stall necessary?
+        if (decode_transfer) begin // todo: is && !execute_stall necessary?
             control_flow_affected <= decode_control_flow_affected;
             jump_target <= decode_jump_target;
         end
