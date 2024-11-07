@@ -16,6 +16,9 @@ module fetch_stage #(
     output logic done_next, // dictates next stage
 
     // global interactions
+    input logic flush_pipeline, // flush the pipeline
+
+    // memory interactions
     output logic [ADDR_WIDTH - 1:0] instruction_addr,
     output logic instruction_fetch_activate, // assert that fetch addr is valid when using this
     input logic [DATA_WIDTH - 1:0] instruction_data,
@@ -52,11 +55,19 @@ module fetch_stage #(
     end
 
     always_comb begin
-        done_next = !rst && has_input && instruction_fetch_done;
-        transfer_next = done_next && !next_stall;
+        if (flush_pipeline) begin
+            done_next = '0;
+            transfer_next = done_next && !next_stall;
 
-        stall_prev = rst || (has_input && !transfer_next);
-        transfer_prev = prev_done && !stall_prev;
+            stall_prev = '0;
+            transfer_prev = prev_done && !stall_prev;
+        end else begin
+            done_next = !rst && has_input && instruction_fetch_done;
+            transfer_next = done_next && !next_stall;
+
+            stall_prev = rst || (has_input && !transfer_next);
+            transfer_prev = prev_done && !stall_prev;
+        end
     end
 
     // todo: prevent multiple fetches/refetching the same thing if stalled
@@ -66,7 +77,7 @@ module fetch_stage #(
     end
 
     always_ff @(posedge clk) if (!rst) begin
-        if (!has_input || transfer_next) begin
+        if (!has_input || transfer_next || flush_pipeline) begin
             // try to accept new input
             if (transfer_prev) begin
                 program_count_i <= program_count_in;

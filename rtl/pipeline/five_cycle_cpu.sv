@@ -443,6 +443,7 @@ module five_cycle_cpu (
     assign decode_transfer = decode_done && !execute_stall;
     assign control_flow_affected = decode_transfer && decode_control_flow_affected;
 
+    // todo: this value needs to get fifo'ed so it doesn't get thrown out by mistake
     always_comb begin
         if (queued_program_count) begin
             if (control_flow_affected) begin
@@ -473,7 +474,8 @@ module five_cycle_cpu (
     end
 
     always_ff @(posedge clk) if (rst) begin
-        queued_program_count <= '0;
+        queued_program_count_value <= 32'h0000_0000;
+        queued_program_count <= '1;
     end
 
     always_ff @(posedge clk) if (!rst) begin
