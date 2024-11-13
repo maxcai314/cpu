@@ -5,10 +5,6 @@ module five_cycle_cpu (
     input logic clk,
     input logic rst
 );
-    logic fetch_stage_rst;
-    logic control_flow_affected;
-    assign fetch_stage_rst = rst || control_flow_affected;
-    
     logic [4:0] read_register_1;
     logic [4:0] read_register_2;
     
@@ -109,7 +105,7 @@ module five_cycle_cpu (
 
     fetch_stage fetch_stage (
         .clk ( clk ),
-        .rst ( fetch_stage_rst ),
+        .rst ( rst ),
 
         .stall_prev ( fetch_stall ),
         .prev_done ( program_count_done ),
@@ -133,6 +129,8 @@ module five_cycle_cpu (
 
     logic execute_stall;
     logic decode_done;
+
+    logic flush_fetch_pipeline;
 
     logic decode_control_flow_affected;
     logic [31:0] decode_jump_target;
@@ -167,6 +165,8 @@ module five_cycle_cpu (
     decode_stage decode_stage (
         .clk ( clk ),
         .rst ( rst ),
+
+        .flush_pipeline ( flush_fetch_pipeline ),
 
         .stall_prev ( decode_stall ),
         .prev_done ( fetch_done ),
@@ -434,31 +434,33 @@ module five_cycle_cpu (
         .program_count_valid_out ( writeback_program_count_valid )
     );
 
-    logic queued_program_count;
+    logic [31:0] queued_program_count;
     logic start_program_count; // whether we will transfer a program count into pipeline
     logic finish_program_count; // whether we will transfer a program count out of pipeline
 
     // flush pipeline if change
     logic decode_transfer;
+    logic control_flow_affected;
     assign decode_transfer = decode_done && !execute_stall;
     assign control_flow_affected = decode_transfer && decode_control_flow_affected;
+    assign flush_fetch_pipeline = control_flow_affected;
 
     // todo: this value needs to get fifo'ed so it doesn't get thrown out by mistake
     always_comb begin
-        if (queued_program_count) begin
+        if (!rst) begin
             if (control_flow_affected) begin
                 program_count = decode_jump_target;
                 program_count_valid = decode_jump_target_valid;
-                program_count_done = !rst;
+                program_count_done = '1;
             end else begin
-                program_count = writeback_program_count + 32'h0000_0004;
-                program_count_valid = writeback_program_count_valid;
-                program_count_done = writeback_done;
+                program_count = queued_program_count;
+                program_count_valid = '1;
+                program_count_done = '1;
             end
         end else begin
-            program_count = 32'h0000_0000;
-            program_count_valid = '1;
-            program_count_done = !rst;
+            program_count = 'X;
+            program_count_valid = '0;
+            program_count_done = '0;
         end
     end
 
@@ -474,13 +476,12 @@ module five_cycle_cpu (
     end
 
     always_ff @(posedge clk) if (rst) begin
-        queued_program_count_value <= 32'h0000_0000;
-        queued_program_count <= '1;
+        queued_program_count <= 32'h0000_0000;
     end
 
     always_ff @(posedge clk) if (!rst) begin
         if (start_program_count) begin
-            queued_program_count <= '1;
+            queued_program_count <= program_count + 32'h0000_0004;
         end
     end
 endmodule
