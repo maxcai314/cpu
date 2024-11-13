@@ -113,6 +113,8 @@ module five_cycle_cpu (
         .next_stall ( decode_stall ),
         .done_next ( fetch_done ),
 
+        .flush_pipeline ( flush_fetch_pipeline ),
+
         .instruction_addr ( ram_instruction_fetch_addr ),
         .instruction_fetch_activate ( ram_instruction_fetch_activate ),
         .instruction_data ( ram_instruction_data ),
@@ -165,8 +167,6 @@ module five_cycle_cpu (
     decode_stage decode_stage (
         .clk ( clk ),
         .rst ( rst ),
-
-        .flush_pipeline ( flush_fetch_pipeline ),
 
         .stall_prev ( decode_stall ),
         .prev_done ( fetch_done ),
