@@ -464,8 +464,6 @@ module five_cycle_cpu (
         end
     end
 
-    assign program_count_stall = '0; // todo: does this actually make sense
-
     always_comb begin
         program_count_done = !rst && queued_program_count;
         start_program_count = !rst && !fetch_stall;
