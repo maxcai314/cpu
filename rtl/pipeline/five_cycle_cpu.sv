@@ -465,7 +465,6 @@ module five_cycle_cpu (
     end
 
     always_comb begin
-        program_count_done = !rst && queued_program_count;
         start_program_count = !rst && !fetch_stall;
         
         program_count_stall = rst;
