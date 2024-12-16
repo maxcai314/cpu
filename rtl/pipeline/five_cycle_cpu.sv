@@ -1,9 +1,11 @@
 `timescale 1ns / 1ps
 
-// a five-cycle cpu
+// a five-cycle pipelined cpu
 module five_cycle_cpu (
     input logic clk,
-    input logic rst
+    input logic rst,
+    
+    output logic led_out
 );
     logic [4:0] read_register_1;
     logic [4:0] read_register_2;
@@ -88,6 +90,9 @@ module five_cycle_cpu (
         .fetched_data ( memory_fetched_data ),
         .fetch_done ( memory_fetch_done )
     );
+    
+    logic flush_fetch_pipeline;
+
 
     logic [31:0] program_count;
     logic program_count_valid;
@@ -131,8 +136,6 @@ module five_cycle_cpu (
 
     logic execute_stall;
     logic decode_done;
-
-    logic flush_fetch_pipeline;
 
     logic decode_control_flow_affected;
     logic [31:0] decode_jump_target;

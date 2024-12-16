@@ -22,7 +22,9 @@ module memory #(
     output logic instruction_fetch_done,
     
     output logic [DATA_WIDTH - 1:0] fetched_data,
-    output logic fetch_done
+    output logic fetch_done,
+    
+    output logic led_out // ugly
 );
 
     logic [7:0] data [MEM_BYTE_SIZE];
@@ -46,12 +48,16 @@ module memory #(
 //        for (logic [ADDR_WIDTH - 1:0] i=0; i<MEM_BYTE_SIZE; i++)
 //            data[i] <= 8'h00;
 //         todo: initialize some instructions to run?
+        led_out <= '0;
     end
         
     always_ff @(posedge clk) if (!rst && write_done) begin
         for (int unsigned i = 0; i < DATA_BYTE_SIZE; i++) begin
             if (i < bytes_to_write)
                 data[write_addr + i] <= write_data[8 * i +:8];
+        end
+        if (bytes_to_write == DATA_INDEXING_WIDTH'(1) && write_addr == 32'h0000_0fff) begin
+            led_out <= write_data != 0;
         end
     end
     
