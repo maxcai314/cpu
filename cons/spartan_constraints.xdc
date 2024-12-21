@@ -6,7 +6,7 @@ create_clock -add -name sys_clk_pin -period 10.000 -waveform {0 5.000}  [get_por
 # binds to five_cycle_cpu.led_out output
 set_property -dict { PACKAGE_PIN E18   IOSTANDARD LVCMOS33 } [get_ports { led_out }]; #IO_L16N_T2_A27_15 Sch=led[2]
 # C18 is a reset button, bind it to five_cycle_cpu.rst input
-set_property -dict { PACKAGE_PIN C18   IOSTANDARD LVCMOS33 } [get_ports { rst }];
+set_property -dict { PACKAGE_PIN C18   IOSTANDARD LVCMOS33 } [get_ports { rst_raw_n }]; # active-low
 
 
 ## Switches

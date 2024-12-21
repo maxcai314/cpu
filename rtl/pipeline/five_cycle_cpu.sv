@@ -88,7 +88,9 @@ module five_cycle_cpu (
         .instruction_fetch_done ( ram_instruction_fetch_done ), // todo: implement in memory handler
         
         .fetched_data ( memory_fetched_data ),
-        .fetch_done ( memory_fetch_done )
+        .fetch_done ( memory_fetch_done ),
+        
+        .led_out ( led_out )
     );
     
     logic flush_fetch_pipeline;
