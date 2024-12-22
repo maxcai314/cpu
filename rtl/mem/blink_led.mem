@@ -1,0 +1,42 @@
+@00000000
+    b7 47 0f 00 // lui a5, 0xf4      ; a5 = 999,424
+    13 85 07 24 // addi a0, a5, 576  ; a0 = 1,000,000
+    
+    b7 17 00 00 // lui a5, 0x1       ; a5 = 0x1000
+    93 87 f7 ff // addi a5, a5, -1   ; a5 = 0x0fff
+    23 80 07 00 // sb x0, 0(a5)      ; LED off using mmio
+    
+    93 05 00 00 // addi a1, x0, 0    ; a1 = 0
+    
+    // jump to loop condition test
+    6f 00 00 01 // jal x0, 16        ; jump 4
+    
+    // loop body
+    93 87 05 00 // addi a5, a1, 0    ; a5 = a1
+    93 87 17 00 // addi a5, a5, 1    ; a5 += 1
+    93 85 07 00 // addi a1, a5, 0    ; a1 = a5
+    
+    // loop condition
+    13 87 05 00 // addi a4, a1, 0    ; a4 = a1
+    93 07 05 00 // addi a5, a0, 0    ; a5 = a0
+    e3 46 f7 f3 // blt a4, a5, -20   ; jump -5 if a4 < a5
+    
+    b7 17 00 00 // lui a5, 0x1       ; a5 = 0x1000
+    93 87 f7 ff // addi a5, a5, -1   ; a5 = 0x0fff
+    13 07 10 00 // addi a4, x0, 1    ; a4 = 1
+    23 80 e7 00 // sb a4, 0(a5)      ; LED on using mmio
+    
+    // jump to loop condition test
+    6f 00 00 01 // jal x0, 16        ; jump 4
+    
+    // loop body
+    93 87 05 00 // addi a5, a1, 0    ; a5 = a1
+    93 87 f7 ff // addi a5, a5, -1   ; a5 -= 1
+    93 85 07 00 // addi a1, a5, 0    ; a1 = a5  
+    
+    // loop condition
+    93 87 05 00 // addi a5, a1, 0    ; a5 = a1
+    e3 48 f0 fe // blt x0, a5, -20   ; jump -5 if 0 < a5
+    
+    6f f0 df fa // jal x0, -84       ; jump to start
+    

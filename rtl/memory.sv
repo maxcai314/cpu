@@ -67,5 +67,10 @@ module memory #(
             fetched_data[8 * i +:8] = data[fetch_addr + i];
         end
     end
+    
+        
+    initial begin
+        $readmemh("blink_led.mem", data);
+    end
 
 endmodule
