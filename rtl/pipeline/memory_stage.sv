@@ -198,6 +198,30 @@ module memory_stage #(
 
     always_ff @(posedge clk) if (rst) begin
         has_input <= '0;
+
+        program_count_i <= '0;
+        program_count_valid_i <= '0;
+        register_arith_i <= '0;
+        immediate_arith_i <= '0;
+        load_i <= '0;
+        store_i <= '0;
+        branch_i <= '0;
+        immediate_jump_i <= '0;
+        register_jump_i <= '0;
+        load_upper_i <= '0;
+        load_upper_pc_i <= '0;
+        environment_i <= '0;
+        opcode_legal_i <= '0;
+        funct_7_i <= '0;
+        funct_7_valid_i <= '0;
+        funct_3_i <= '0;
+        funct_3_valid_i <= '0;
+        memory_store_data_i <= '0;
+        memory_store_data_valid_i <= '0;
+        write_register_i <= '0;
+        writeback_enabled_i <= '0;
+        result_data_i <= '0;
+        result_data_valid_i <= '0;
     end else begin
         if (!has_input || transfer_next) begin
             // try to accept new input

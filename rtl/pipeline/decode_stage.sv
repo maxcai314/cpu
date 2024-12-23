@@ -193,6 +193,11 @@ module decode_stage #(
 
     always_ff @(posedge clk) if (rst) begin
         has_input <= '0;
+
+        program_count_i <= '0;
+        program_count_valid_i <= '0;
+        instruction_data_i <= '0;
+        instruction_data_valid_i <= '0;
     end else begin
         if (!has_input || transfer_next) begin
             // try to accept new input
