@@ -479,9 +479,7 @@ module five_cycle_cpu (
 
     always_ff @(posedge clk) if (rst) begin
         queued_program_count <= 32'h0000_0000;
-    end
-
-    always_ff @(posedge clk) if (!rst) begin
+    end else begin
         if (start_program_count) begin
             queued_program_count <= program_count + 32'h0000_0004;
         end

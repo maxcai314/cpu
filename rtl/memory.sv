@@ -49,9 +49,7 @@ module memory #(
 //            data[i] <= 8'h00;
 //         todo: initialize some instructions to run?
         led_out <= '0;
-    end
-        
-    always_ff @(posedge clk) if (!rst && write_done) begin
+    end else if (write_done) begin
         for (int unsigned i = 0; i < DATA_BYTE_SIZE; i++) begin
             if (i < bytes_to_write)
                 data[write_addr + i] <= write_data[8 * i +:8];

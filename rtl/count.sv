@@ -57,9 +57,7 @@ module count #(
     
     always_ff @(posedge clk) if (rst) begin
         program_count <= 32'h0000_0000;
-    end
-    
-    always_ff @(posedge clk) if (!rst && !halted) begin
+    end else if (!halted) begin
         if (branch && branch_condition)
             program_count <= program_count + immediate_offset;
         else if (immediate_jump)

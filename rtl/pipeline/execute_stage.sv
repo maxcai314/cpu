@@ -282,9 +282,7 @@ module execute_stage #(
 
     always_ff @(posedge clk) if (rst) begin
         has_input <= '0;
-    end
-
-    always_ff @(posedge clk) if (!rst) begin
+    end else begin
         if (!has_input || transfer_next) begin
             // try to accept new input
             if (transfer_prev) begin

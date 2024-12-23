@@ -33,9 +33,7 @@ module registers #(
     always_ff @(posedge clk) if (rst) begin
         for (int i = 1; i < NUM_REGISTERS; i++)
             data[i] <= DATA_WIDTH'(0); // reset registers
-    end
-    
-    always_ff @(posedge clk) if (!rst) begin
+    end else begin
         if (write_done)
             if (write_register != 0)
                 data[write_register] <= write_data;
