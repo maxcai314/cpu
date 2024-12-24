@@ -26,9 +26,8 @@ module memory_stage #(
 
     // memory interactions
     output logic [ADDR_WIDTH - 1:0] write_addr,
-    output logic [DATA_WIDTH - 1:0] write_data,
+    output logic [7:0] write_data,
     output logic write_activate, // assert that write addr and data are valid when using this
-    output logic [DATA_INDEXING_WIDTH - 1:0] largest_byte_index,
     input logic write_done,
 
     output logic [ADDR_WIDTH - 1:0] fetch_addr,
@@ -137,12 +136,12 @@ module memory_stage #(
     end
 
     always_comb begin
-        write_data = memory_store_data_i;
+        write_addr = result_data_i + write_byte_index;
+        write_data = memory_store_data_i[8 * write_byte_index +:8];
 
         write_activate = store_i;
         fetch_activate = load_i;
 
-        write_addr = result_data_i;
         fetch_addr = result_data_i;
     end
 
@@ -172,7 +171,7 @@ module memory_stage #(
 
     always_comb begin
         if (store_i) begin
-            done_next = !rst && has_input && write_done;
+            done_next = !rst && has_input && write_byte_index == 0 && write_done;
             result_data_out = 'X;
             result_data_valid_out = '0;
         end else if (load_i) begin
@@ -188,6 +187,8 @@ module memory_stage #(
 
     assign instruction_writeback_register = write_register_i;
     assign instruction_writeback_enabled = writeback_enabled_i && has_input;
+
+    logic [DATA_INDEXING_WIDTH - 1:0] write_byte_index;
 
     always_comb begin
         transfer_next = done_next && !next_stall;
@@ -222,6 +223,8 @@ module memory_stage #(
         writeback_enabled_i <= '0;
         result_data_i <= '0;
         result_data_valid_i <= '0;
+
+        write_byte_index <= 'X;
     end else begin
         if (!has_input || transfer_next) begin
             // try to accept new input
@@ -250,9 +253,21 @@ module memory_stage #(
                 result_data_i <= result_data_in;
                 result_data_valid_i <= result_data_valid_in;
 
+                unique case (funct_3_in)
+                    3'h0 : write_byte_index <= 3'h0; // byte
+                    3'h1 : write_byte_index <= 3'h1; // half
+                    3'h2 : write_byte_index <= 3'h3; // word
+                    
+                    default : write_byte_index <= 'X;
+                endcase
+
                 has_input <= '1;
             end else begin
                 has_input <= '0;
+            end
+        end else if (has_input && store_i) begin
+            if (write_done && write_byte_index != 0) begin
+                write_byte_index <= write_byte_index - 1;
             end
         end
     end
