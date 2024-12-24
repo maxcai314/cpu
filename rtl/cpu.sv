@@ -101,7 +101,7 @@ module cpu (
     
     logic [31:0] fetch_addr;
     
-    logic [1:0] largest_byte_index; // zero for no-op
+    logic [2:0] bytes_to_write; // zero for no-op
     logic [31:0] write_addr;
     logic [31:0] write_data;
     logic write_activate;
@@ -118,7 +118,7 @@ module cpu (
         .instruction_addr ( program_count ),
         .fetch_addr ( fetch_addr ),
         
-        .largest_byte_index ( largest_byte_index ),
+        .bytes_to_write ( bytes_to_write ),
         .write_addr ( write_addr ),
         .write_data ( write_data ),
         .write_activate ( write_activate ),
@@ -180,11 +180,11 @@ module cpu (
     endcase
     
     always_comb unique case (funct_3)
-        3'h0 : largest_byte_index = 2'h0; // byte
-        3'h1 : largest_byte_index = 2'h1; // half
-        3'h2 : largest_byte_index = 2'h3; // word
+        3'h0 : bytes_to_write = 3'h1; // byte
+        3'h1 : bytes_to_write = 3'h2; // half
+        3'h2 : bytes_to_write = 3'h4; // word
         
-        default : largest_byte_index = 'X;
+        default : bytes_to_write = 'X;
     endcase
     
     assign write_data = register_result_2;
