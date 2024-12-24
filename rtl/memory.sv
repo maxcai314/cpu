@@ -11,7 +11,7 @@ module memory #(
     input logic [ADDR_WIDTH - 1:0] instruction_addr,
     input logic [ADDR_WIDTH - 1:0] fetch_addr,
     
-    input logic [DATA_INDEXING_WIDTH:0] bytes_to_write,
+    input logic [DATA_INDEXING_WIDTH - 1:0] largest_byte_index,
     input logic [ADDR_WIDTH - 1:0] write_addr,
     input logic [DATA_WIDTH - 1:0] write_data,
     input logic write_activate,
@@ -28,34 +28,45 @@ module memory #(
 );
 
     logic [7:0] data [MEM_BYTE_SIZE];
-    
-    logic [3:0] write_timer; // simulation: only write on every 16th cycle
-    
-    always_ff @(posedge clk) begin
-        if (rst) begin
-            write_timer <= '0;
-        end else begin
-            write_timer <= write_timer + 1;
-        end
-    end
+
+    logic has_write;
+    logic [ADDR_WIDTH - 1:0] write_addr_i;
+    logic [DATA_WIDTH - 1:0] write_data_i;
+    logic [DATA_INDEXING_WIDTH:0] largest_byte_index_i;
     
     // todo: use realistic memory; also see if fetch failed
     assign instruction_fetch_done = '1;
     assign fetch_done = '1;
-    assign write_done = write_activate && (write_timer == 0); // whether or not the write will happen next cycle
+    assign write_done = has_write && largest_byte_index_i == 0; // whether or not the write will happen next cycle
     
     always_ff @(posedge clk) if (rst) begin
-//        for (logic [ADDR_WIDTH - 1:0] i=0; i<MEM_BYTE_SIZE; i++)
-//            data[i] <= 8'h00;
-//         todo: initialize some instructions to run?
         led_out <= '0;
-    end else if (write_done) begin
-        for (int unsigned i = 0; i < DATA_BYTE_SIZE; i++) begin
-            if (i < bytes_to_write)
-                data[write_addr + i] <= write_data[8 * i +:8];
-        end
-        if (bytes_to_write == DATA_INDEXING_WIDTH'(1) && write_addr == 32'h0000_0fff) begin
+        
+        has_write <= '0;
+        write_addr_i <= '0;
+        write_data_i <= '0;
+        largest_byte_index_i <= '0;
+    end else begin
+        if (has_write) begin
+            data[write_addr_i +: largest_byte_index_i] <= write_data_i;[8 * largest_byte_index_i +:8];
+            largest_byte_index_i <= largest_byte_index_i - 1;
+
+            if (largest_byte_index == 0 && write_addr == 32'h0000_0fff) begin
             led_out <= write_data != 0;
+        end
+        end
+
+        if (!has_write || write_done) begin
+            // try to accept new input
+            if (write_activate) begin
+                write_addr_i <= write_addr;
+                write_data_i <= write_data;
+                largest_byte_index_i <= largest_byte_index;
+                
+                has_write <= '1;
+            end else begin
+                has_write <= '0;
+            end
         end
     end
     

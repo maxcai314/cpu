@@ -28,7 +28,7 @@ module memory_stage #(
     output logic [ADDR_WIDTH - 1:0] write_addr,
     output logic [DATA_WIDTH - 1:0] write_data,
     output logic write_activate, // assert that write addr and data are valid when using this
-    output logic [DATA_INDEXING_WIDTH:0] bytes_to_write,
+    output logic [DATA_INDEXING_WIDTH - 1:0] largest_byte_index,
     input logic write_done,
 
     output logic [ADDR_WIDTH - 1:0] fetch_addr,
@@ -147,11 +147,11 @@ module memory_stage #(
     end
 
     always_comb unique case (funct_3_i)
-        3'h0 : bytes_to_write = 3'h1; // byte
-        3'h1 : bytes_to_write = 3'h2; // half
-        3'h2 : bytes_to_write = 3'h4; // word
+        3'h0 : largest_byte_index = 2'h0; // byte
+        3'h1 : largest_byte_index = 2'h1; // half
+        3'h2 : largest_byte_index = 2'h3; // word
         
-        default : bytes_to_write = 'X;
+        default : largest_byte_index = 'X;
     endcase
 
     logic [31:0] load_data;

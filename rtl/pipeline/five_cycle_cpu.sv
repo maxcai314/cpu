@@ -65,7 +65,7 @@ module five_cycle_cpu (
     logic [31:0] memory_fetched_data;
     logic memory_fetch_done;
 
-    logic [2:0] memory_bytes_to_write;
+    logic [2:0] memory_largest_byte_index;
     logic [31:0] memory_write_addr;
     logic [31:0] memory_write_data;
     logic memory_write_activate;
@@ -78,7 +78,7 @@ module five_cycle_cpu (
         .instruction_addr ( ram_instruction_fetch_addr ),
         .fetch_addr ( memory_fetch_addr ),
         
-        .bytes_to_write ( memory_bytes_to_write ),
+        .largest_byte_index ( memory_largest_byte_index ),
         .write_addr ( memory_write_addr ),
         .write_data ( memory_write_data ),
         .write_activate ( memory_write_activate ),
@@ -347,7 +347,7 @@ module five_cycle_cpu (
         .write_addr ( memory_write_addr ),
         .write_data ( memory_write_data ),
         .write_activate ( memory_write_activate ),
-        .bytes_to_write ( memory_bytes_to_write ),
+        .largest_byte_index ( memory_largest_byte_index ),
         .write_done ( memory_write_done ),
 
         .fetch_addr ( memory_fetch_addr ),

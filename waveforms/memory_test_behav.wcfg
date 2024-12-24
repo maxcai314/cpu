@@ -48,9 +48,9 @@
       <obj_property name="ElementShortName">write_addr[31:0]</obj_property>
       <obj_property name="ObjectShortName">write_addr[31:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/memory_test/bytes_to_write">
-      <obj_property name="ElementShortName">bytes_to_write[2:0]</obj_property>
-      <obj_property name="ObjectShortName">bytes_to_write[2:0]</obj_property>
+   <wvobject type="array" fp_name="/memory_test/largest_byte_index">
+      <obj_property name="ElementShortName">largest_byte_index[2:0]</obj_property>
+      <obj_property name="ObjectShortName">largest_byte_index[2:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/memory_test/write_data">
       <obj_property name="ElementShortName">write_data[31:0]</obj_property>
