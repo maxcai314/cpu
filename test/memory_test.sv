@@ -10,7 +10,7 @@ module memory_test(
     logic [31:0] instruction_addr;
     logic [31:0] fetch_addr;
     
-    logic [2:0] largest_byte_index; // zero for no-op
+    logic [2:0] bytes_to_write; // zero for no-op
     logic [31:0] write_addr;
     logic [31:0] write_data;
     logic write_activate;
@@ -27,7 +27,7 @@ module memory_test(
         .instruction_addr ( instruction_addr ),
         .fetch_addr ( fetch_addr ),
         
-        .largest_byte_index ( largest_byte_index ),
+        .bytes_to_write ( bytes_to_write ),
         .write_addr ( write_addr ),
         .write_data ( write_data ),
         .write_activate ( write_activate ),
@@ -53,7 +53,7 @@ module memory_test(
         @(posedge clk)
         rst = 0;
         
-        largest_byte_index = 3'd0;
+        bytes_to_write = 3'd0;
         write_activate = '0;
         
         // read from consecuitive words (4 bytes apart)
@@ -66,7 +66,7 @@ module memory_test(
         write_addr = 32'h0100;
         write_data = 32'hffff_ffff;
         write_activate = '1;
-        largest_byte_index = 3'd4;
+        bytes_to_write = 3'd4;
         
         do begin
             @(posedge clk);
@@ -85,7 +85,7 @@ module memory_test(
         assert(!write_done);
         assert(instruction_data == 32'hffff_ffff);
         // clear lower byte
-        largest_byte_index = 3'd1;
+        bytes_to_write = 3'd1;
         write_activate = '1;
         
         do begin
@@ -96,7 +96,7 @@ module memory_test(
         
         assert(instruction_data == 32'hffff_ff00);
         // clear lower half
-        largest_byte_index = 3'd2;
+        bytes_to_write = 3'd2;
         
         do begin
             @(posedge clk);
@@ -105,7 +105,7 @@ module memory_test(
         
         assert(instruction_data == 32'hffff_0000);
         // clear word
-        largest_byte_index = 3'd4;
+        bytes_to_write = 3'd4;
         
         do begin
             @(posedge clk);
@@ -117,7 +117,7 @@ module memory_test(
         // write to next byte
         write_addr = 32'h0104;
         write_data = 32'hdead_beef;
-        largest_byte_index = 3'd4;
+        bytes_to_write = 3'd4;
         
         do begin
             @(posedge clk);
@@ -128,7 +128,7 @@ module memory_test(
         
         // overwrite lower half only
         write_data = 32'hb0ba_cafe;
-        largest_byte_index = 3'd2;
+        bytes_to_write = 3'd2;
         
         // should read 0xdead_cafe
         
@@ -144,7 +144,7 @@ module memory_test(
         // test address endianess
         write_addr = 32'h0100;
         write_data = 32'h0000_0000;
-        largest_byte_index = 3'd4;
+        bytes_to_write = 3'd4;
         
         do begin
             @(posedge clk);
@@ -165,7 +165,7 @@ module memory_test(
         @(posedge clk)
         
         // load in test image
-        largest_byte_index = 3'd0;
+        bytes_to_write = 3'd0;
         instruction_addr = 32'h0000; // should read 0xdead_beef
         fetch_addr = 32'h0004; // should read 0xaabb_ccdd
         rst = '1;
