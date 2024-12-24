@@ -89,7 +89,7 @@ module writeback_stage #(
     assign write_activate = writeback_enabled_i && has_input;
 
     always_comb begin
-        done_next = !rst && has_input && write_done;
+        done_next = !rst && has_input && write_activate ? write_done : 1;
         transfer_next = done_next && !next_stall;
 
         stall_prev = rst || (has_input && !transfer_next);
