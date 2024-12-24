@@ -65,7 +65,7 @@ module five_cycle_cpu (
     logic [31:0] memory_fetched_data;
     logic memory_fetch_done;
 
-    logic [2:0] memory_largest_byte_index;
+    logic [1:0] memory_largest_byte_index;
     logic [31:0] memory_write_addr;
     logic [31:0] memory_write_data;
     logic memory_write_activate;

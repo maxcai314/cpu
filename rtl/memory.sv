@@ -48,12 +48,13 @@ module memory #(
         largest_byte_index_i <= '0;
     end else begin
         if (has_write) begin
-            data[write_addr_i +: largest_byte_index_i] <= write_data_i;[8 * largest_byte_index_i +:8];
-            largest_byte_index_i <= largest_byte_index_i - 1;
+            data[write_addr_i + largest_byte_index_i] <= write_data_i[8 * largest_byte_index_i +:8];
+            if (largest_byte_index_i != 0)
+                largest_byte_index_i <= largest_byte_index_i - 1;
 
             if (largest_byte_index == 0 && write_addr == 32'h0000_0fff) begin
-            led_out <= write_data != 0;
-        end
+                led_out <= write_data != 0;
+            end
         end
 
         if (!has_write || write_done) begin
