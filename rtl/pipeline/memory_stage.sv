@@ -115,6 +115,8 @@ module memory_stage #(
     logic writeback_enabled_i;
     logic [DATA_WIDTH - 1:0] result_data_i;
     logic result_data_valid_i;
+    
+    logic [DATA_INDEXING_WIDTH - 1:0] write_byte_index;
 
     // pass-through
     always_comb begin
@@ -144,14 +146,6 @@ module memory_stage #(
 
         fetch_addr = result_data_i;
     end
-
-    always_comb unique case (funct_3_i)
-        3'h0 : largest_byte_index = 2'h0; // byte
-        3'h1 : largest_byte_index = 2'h1; // half
-        3'h2 : largest_byte_index = 2'h3; // word
-        
-        default : largest_byte_index = 'X;
-    endcase
 
     logic [31:0] load_data;
     always_comb unique case (funct_3_i)
@@ -187,8 +181,6 @@ module memory_stage #(
 
     assign instruction_writeback_register = write_register_i;
     assign instruction_writeback_enabled = writeback_enabled_i && has_input;
-
-    logic [DATA_INDEXING_WIDTH - 1:0] write_byte_index;
 
     always_comb begin
         transfer_next = done_next && !next_stall;
@@ -254,9 +246,9 @@ module memory_stage #(
                 result_data_valid_i <= result_data_valid_in;
 
                 unique case (funct_3_in)
-                    3'h0 : write_byte_index <= 3'h0; // byte
-                    3'h1 : write_byte_index <= 3'h1; // half
-                    3'h2 : write_byte_index <= 3'h3; // word
+                    3'h0 : write_byte_index <= 2'h0; // byte
+                    3'h1 : write_byte_index <= 2'h1; // half
+                    3'h2 : write_byte_index <= 2'h3; // word
                     
                     default : write_byte_index <= 'X;
                 endcase

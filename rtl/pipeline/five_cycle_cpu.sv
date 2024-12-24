@@ -70,7 +70,7 @@ module five_cycle_cpu (
     logic memory_write_activate;
     logic memory_write_done;
 
-    memory memory (
+    bytewise_memory memory (
         .clk ( clk ),
         .rst ( rst ),
         
@@ -345,7 +345,6 @@ module five_cycle_cpu (
         .write_addr ( memory_write_addr ),
         .write_data ( memory_write_data ),
         .write_activate ( memory_write_activate ),
-        .largest_byte_index ( memory_largest_byte_index ),
         .write_done ( memory_write_done ),
 
         .fetch_addr ( memory_fetch_addr ),
