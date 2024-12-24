@@ -48,6 +48,9 @@ module bytewise_memory #(
     end else begin
         if (write_done) begin
             data[write_addr] <= write_data;
+            if (write_addr == 32'h0000_0fff) begin
+                led_out <= write_data != 0;
+            end
         end
     end
     
