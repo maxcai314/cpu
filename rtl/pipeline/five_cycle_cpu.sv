@@ -413,6 +413,7 @@ module five_cycle_cpu (
         .write_register ( write_register ),
         .write_data ( write_register_data ),
         .write_activate ( write_register_activate ),
+        .write_done ( register_write_done ),
 
         .program_count_in ( memory_program_count ),
         .program_count_valid_in ( memory_program_count_valid ),

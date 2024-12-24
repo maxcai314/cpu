@@ -22,6 +22,7 @@ module writeback_stage #(
     output logic [REGISTER_INDEXING_WIDTH - 1:0] write_register,
     output logic [DATA_WIDTH - 1:0] write_data,
     output logic write_activate, // assert that write reg and data are valid when using this
+    input logic write_done, // whether the impending operation will be completed on the next posedge
     // todo: exceptions
 
     // pipeline inputs
@@ -88,7 +89,7 @@ module writeback_stage #(
     assign write_activate = writeback_enabled_i && has_input;
 
     always_comb begin
-        done_next = !rst && has_input; // register writing doesn't stall
+        done_next = !rst && has_input && write_done;
         transfer_next = done_next && !next_stall;
 
         stall_prev = rst || (has_input && !transfer_next);
