@@ -1,7 +1,7 @@
 #include "types.h"
 #include "riscv_io.h"
 
-int main(void) __attribute__ ((section ("entry")));
+int main(void);
 void setup(void);
 void loop(void);
 
@@ -21,10 +21,10 @@ void setup() {
 void loop() {
     // Turn on the LED
     set_led_output(1);
-    delay_ms(1000); // Delay for 1 second
+    delay_ms(1);
 
     // Turn off the LED
     set_led_output(0);
-    delay_ms(1000); // Delay for 1 second
-    a *= a;
+    delay_ms(1);
+    a *= 2;
 }

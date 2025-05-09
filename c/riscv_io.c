@@ -3,7 +3,7 @@
 #define MMIO32(ADDR) ((volatile u32 *)(ADDR))
 #define MMIO8(ADDR) ((volatile u8 *)(ADDR))
 
-#define SIO_BASE (0x00000fff)
+#define SIO_BASE (0x01000fff)
 #define SIO_LED_OUTPUT MMIO8(SIO_BASE + 0x00)
 
 void set_led_output(u8 value) {
@@ -13,31 +13,18 @@ void set_led_output(u8 value) {
 // does roughly 20 cycles of stalling
 static inline void stall_loop(u32 num_iter) {
     asm volatile (
-        "loop:\n\t"
-        "beq %0, zero, end\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
+        "1:\n\t"
+        "beq %0, zero, 2f\n\t"
         "addi %0, %0, -1\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "j loop\n\t"
-        "end:\n\t"
-        : /* no output */
-        : "r"(num_iter) // input
-        : "memory" // compiler memory barrier
+        "nop\n\t" "nop\n\t" "nop\n\t" "nop\n\t"
+        "nop\n\t" "nop\n\t" "nop\n\t" "nop\n\t"
+        "nop\n\t" "nop\n\t" "nop\n\t" "nop\n\t"
+        "nop\n\t" "nop\n\t" "nop\n\t" "nop\n\t"
+        "j 1b\n\t"
+        "2:\n\t"
+        : "+r"(num_iter)
+        :
+        : "memory"
     );
 }
 

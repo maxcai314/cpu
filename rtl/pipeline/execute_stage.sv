@@ -141,9 +141,6 @@ module execute_stage #(
         memory_store_data_valid_out = register_2_data_valid_i && store_i;
     end
 
-    logic [IMMEDIATE_WIDTH - 1:0] upper_immediate;
-    assign upper_immediate = immediate_data_i << 12;
-
     logic [DATA_WIDTH - 1:0] lhs;
     logic lhs_valid;
 
@@ -226,7 +223,7 @@ module execute_stage #(
             metadata = 7'h00;
             metadata_valid = '1;
         end else if (load_upper_i) begin
-            lhs = upper_immediate;
+            lhs = immediate_data_i;
             lhs_valid = immediate_data_valid_i;
 
             rhs = 32'h0000_0000;
@@ -238,7 +235,7 @@ module execute_stage #(
             metadata = 7'h00;
             metadata_valid = '1;
         end else if (load_upper_pc_i) begin
-            lhs = upper_immediate;
+            lhs = immediate_data_i;
             lhs_valid = immediate_data_valid_i;
 
             rhs = program_count_i;

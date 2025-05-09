@@ -55,7 +55,7 @@ module memory #(
             if (i < bytes_to_write)
                 data[write_addr + i] <= write_data[8 * i +:8];
         end
-        if (bytes_to_write == DATA_INDEXING_WIDTH'(1) && write_addr == 32'h0000_0fff) begin
+        if (bytes_to_write == DATA_INDEXING_WIDTH'(1) && write_addr == 32'h0100_0fff) begin
             led_out <= write_data != 0;
         end
     end
