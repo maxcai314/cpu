@@ -7,6 +7,8 @@ OBJCOPY = $(PREFIX)-objcopy
 CFLAGS = -march=rv32id -ffreestanding -nostdlib -lgcc -O2
 LDFLAGS = -melf32lriscv -T link_riscv.ld
 
+LGCC = $(shell $(CC) -print-libgcc-file-name)
+
 SRC_C = main.c riscv_io.c
 SRC_S = start.S
 OBJ = $(SRC_C:.c=.o) $(SRC_S:.S=.o)
@@ -23,7 +25,7 @@ all: main.mem
 	$(CC) $(CFLAGS) -c $< -o $@
 
 main.bin: $(OBJ)
-	$(LD) $(LDFLAGS) $^ /opt/riscv/lib/gcc/riscv32-unknown-elf/14.2.0/libgcc.a -o $@
+	$(LD) $(LDFLAGS) $^ $(LGCC) -o $@
 
 main.raw: main.bin
 	$(STRIP) $<
