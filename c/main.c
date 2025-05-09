@@ -1,6 +1,5 @@
-#include <types.h>
-#include <riscv_io.h>
-
+#include "types.h"
+#include "riscv_io.h"
 
 int main(void) __attribute__ ((section ("entry")));
 void setup(void);
