@@ -28,7 +28,7 @@ static inline void stall_loop(u32 num_iter) {
     );
 }
 
-#define LOOPS_PER_MS 1000 // Adjust this value based on your system's clock speed
+#define LOOPS_PER_MS 746 // Adjust this value based on your system's clock speed
 
 void delay_ms(u32 ms) {
     for (u32 i = 0; i < ms; i++) {
