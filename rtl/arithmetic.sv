@@ -9,10 +9,10 @@ module arithmetic #(
     input logic [DATA_WIDTH - 1:0] rhs, // rs2 value or decoded immediate
     input logic rhs_valid,
     
-    input logic [14:12] operation, // funct3
+    input logic [14:12] operation, // funct_3
     input logic operation_valid,
     
-    input logic [31:25] metadata, // funct7, or imm[11:5] if applicable (otherwise zero)
+    input logic [31:25] metadata, // funct_7, or imm[11:5] if applicable (otherwise zero)
     input logic metadata_valid,
     
     output logic [DATA_WIDTH -1:0] result,

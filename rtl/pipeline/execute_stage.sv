@@ -147,10 +147,10 @@ module execute_stage #(
     logic [DATA_WIDTH - 1:0] rhs;
     logic rhs_valid;
 
-    logic [14:12] operation; // funct3
+    logic [14:12] operation; // funct_3
     logic operation_valid;
     
-    logic [31:25] metadata; // funct7, or imm[11:5] if applicable (otherwise zero)
+    logic [31:25] metadata; // funct_7, or imm[11:5] if applicable (otherwise zero)
     logic metadata_valid;
     
     logic arithmetic_code_legal;
