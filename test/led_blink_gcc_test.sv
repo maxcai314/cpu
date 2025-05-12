@@ -26,7 +26,7 @@ module led_blink_gcc_test(
         @(posedge clk)
         rst = '1;
         @(posedge clk)
-        $readmemh("test_led_blink_gcc.mem", cpu.memory.data);
+        $readmemh("test_display_pi_digits.mem", cpu.memory.data);
         @(posedge clk)
         rst = '0;
         @(posedge clk)
