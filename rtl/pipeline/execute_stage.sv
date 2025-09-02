@@ -141,19 +141,16 @@ module execute_stage #(
         memory_store_data_valid_out = register_2_data_valid_i && store_i;
     end
 
-    logic [IMMEDIATE_WIDTH - 1:0] upper_immediate;
-    assign upper_immediate = immediate_data_i << 12;
-
     logic [DATA_WIDTH - 1:0] lhs;
     logic lhs_valid;
 
     logic [DATA_WIDTH - 1:0] rhs;
     logic rhs_valid;
 
-    logic [14:12] operation; // funct3
+    logic [14:12] operation; // funct_3
     logic operation_valid;
     
-    logic [31:25] metadata; // funct7, or imm[11:5] if applicable (otherwise zero)
+    logic [31:25] metadata; // funct_7, or imm[11:5] if applicable (otherwise zero)
     logic metadata_valid;
     
     logic arithmetic_code_legal;
@@ -226,7 +223,7 @@ module execute_stage #(
             metadata = 7'h00;
             metadata_valid = '1;
         end else if (load_upper_i) begin
-            lhs = upper_immediate;
+            lhs = immediate_data_i;
             lhs_valid = immediate_data_valid_i;
 
             rhs = 32'h0000_0000;
@@ -238,7 +235,7 @@ module execute_stage #(
             metadata = 7'h00;
             metadata_valid = '1;
         end else if (load_upper_pc_i) begin
-            lhs = upper_immediate;
+            lhs = immediate_data_i;
             lhs_valid = immediate_data_valid_i;
 
             rhs = program_count_i;
@@ -282,9 +279,33 @@ module execute_stage #(
 
     always_ff @(posedge clk) if (rst) begin
         has_input <= '0;
-    end
 
-    always_ff @(posedge clk) if (!rst) begin
+        program_count_i <= '0;
+        program_count_valid_i <= '0;
+        register_arith_i <= '0;
+        immediate_arith_i <= '0;
+        load_i <= '0;
+        store_i <= '0;
+        branch_i <= '0;
+        immediate_jump_i <= '0;
+        register_jump_i <= '0;
+        load_upper_i <= '0;
+        load_upper_pc_i <= '0;
+        environment_i <= '0;
+        opcode_legal_i <= '0;
+        immediate_data_i <= '0;
+        immediate_data_valid_i <= '0;
+        register_1_data_i <= '0;
+        register_1_data_valid_i <= '0;
+        register_2_data_i <= '0;
+        register_2_data_valid_i <= '0;
+        write_register_i <= '0;
+        writeback_enabled_i <= '0;
+        funct_7_i <= '0;
+        funct_7_valid_i <= '0;
+        funct_3_i <= '0;
+        funct_3_valid_i <= '0;
+    end else begin
         if (!has_input || transfer_next) begin
             // try to accept new input
             if (transfer_prev) begin

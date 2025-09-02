@@ -22,6 +22,7 @@ module writeback_stage #(
     output logic [REGISTER_INDEXING_WIDTH - 1:0] write_register,
     output logic [DATA_WIDTH - 1:0] write_data,
     output logic write_activate, // assert that write reg and data are valid when using this
+    input logic write_done, // whether the impending operation will be completed on the next posedge
     // todo: exceptions
 
     // pipeline inputs
@@ -88,7 +89,7 @@ module writeback_stage #(
     assign write_activate = writeback_enabled_i && has_input;
 
     always_comb begin
-        done_next = !rst && has_input; // register writing doesn't stall
+        done_next = !rst && has_input && write_activate ? write_done : 1;
         transfer_next = done_next && !next_stall;
 
         stall_prev = rst || (has_input && !transfer_next);
@@ -97,9 +98,25 @@ module writeback_stage #(
 
     always_ff @(posedge clk) if (rst) begin
         has_input <= '0;
-    end
 
-    always_ff @(posedge clk) if (!rst) begin
+        program_count_i <= '0;
+        program_count_valid_i <= '0;
+        register_arith_i <= '0;
+        immediate_arith_i <= '0;
+        load_i <= '0;
+        store_i <= '0;
+        branch_i <= '0;
+        immediate_jump_i <= '0;
+        register_jump_i <= '0;
+        load_upper_i <= '0;
+        load_upper_pc_i <= '0;
+        environment_i <= '0;
+        opcode_legal_i <= '0;
+        write_register_i <= '0;
+        writeback_enabled_i <= '0;
+        result_data_i <= '0;
+        result_data_valid_i <= '0;
+    end else begin
         if (!has_input || transfer_next) begin
             // try to accept new input
             if (transfer_prev) begin

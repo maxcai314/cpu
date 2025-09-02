@@ -26,9 +26,8 @@ module memory_stage #(
 
     // memory interactions
     output logic [ADDR_WIDTH - 1:0] write_addr,
-    output logic [DATA_WIDTH - 1:0] write_data,
+    output logic [7:0] write_data,
     output logic write_activate, // assert that write addr and data are valid when using this
-    output logic [DATA_INDEXING_WIDTH:0] bytes_to_write,
     input logic write_done,
 
     output logic [ADDR_WIDTH - 1:0] fetch_addr,
@@ -116,6 +115,8 @@ module memory_stage #(
     logic writeback_enabled_i;
     logic [DATA_WIDTH - 1:0] result_data_i;
     logic result_data_valid_i;
+    
+    logic [DATA_INDEXING_WIDTH - 1:0] write_byte_index;
 
     // pass-through
     always_comb begin
@@ -137,22 +138,14 @@ module memory_stage #(
     end
 
     always_comb begin
-        write_data = memory_store_data_i;
+        write_addr = result_data_i + write_byte_index;
+        write_data = memory_store_data_i[8 * write_byte_index +:8];
 
         write_activate = store_i;
         fetch_activate = load_i;
 
-        write_addr = result_data_i;
         fetch_addr = result_data_i;
     end
-
-    always_comb unique case (funct_3_i)
-        3'h0 : bytes_to_write = 3'h1; // byte
-        3'h1 : bytes_to_write = 3'h2; // half
-        3'h2 : bytes_to_write = 3'h4; // word
-        
-        default : bytes_to_write = 'X;
-    endcase
 
     logic [31:0] load_data;
     always_comb unique case (funct_3_i)
@@ -172,7 +165,7 @@ module memory_stage #(
 
     always_comb begin
         if (store_i) begin
-            done_next = !rst && has_input && write_done;
+            done_next = !rst && has_input && write_byte_index == 0 && write_done;
             result_data_out = 'X;
             result_data_valid_out = '0;
         end else if (load_i) begin
@@ -198,9 +191,33 @@ module memory_stage #(
 
     always_ff @(posedge clk) if (rst) begin
         has_input <= '0;
-    end
 
-    always_ff @(posedge clk) if (!rst) begin
+        program_count_i <= '0;
+        program_count_valid_i <= '0;
+        register_arith_i <= '0;
+        immediate_arith_i <= '0;
+        load_i <= '0;
+        store_i <= '0;
+        branch_i <= '0;
+        immediate_jump_i <= '0;
+        register_jump_i <= '0;
+        load_upper_i <= '0;
+        load_upper_pc_i <= '0;
+        environment_i <= '0;
+        opcode_legal_i <= '0;
+        funct_7_i <= '0;
+        funct_7_valid_i <= '0;
+        funct_3_i <= '0;
+        funct_3_valid_i <= '0;
+        memory_store_data_i <= '0;
+        memory_store_data_valid_i <= '0;
+        write_register_i <= '0;
+        writeback_enabled_i <= '0;
+        result_data_i <= '0;
+        result_data_valid_i <= '0;
+
+        write_byte_index <= 'X;
+    end else begin
         if (!has_input || transfer_next) begin
             // try to accept new input
             if (transfer_prev) begin
@@ -228,9 +245,21 @@ module memory_stage #(
                 result_data_i <= result_data_in;
                 result_data_valid_i <= result_data_valid_in;
 
+                unique case (funct_3_in)
+                    3'h0 : write_byte_index <= 2'h0; // byte
+                    3'h1 : write_byte_index <= 2'h1; // half
+                    3'h2 : write_byte_index <= 2'h3; // word
+                    
+                    default : write_byte_index <= 'X;
+                endcase
+
                 has_input <= '1;
             end else begin
                 has_input <= '0;
+            end
+        end else if (has_input && store_i) begin
+            if (write_done && write_byte_index != 0) begin
+                write_byte_index <= write_byte_index - 1;
             end
         end
     end

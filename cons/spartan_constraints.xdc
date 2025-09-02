@@ -1,8 +1,11 @@
 ## This file is a general .xdc for the Arty S7-25 Rev. E
 
 # binds to five_cycle_cpu.clk input
-set_property -dict { PACKAGE_PIN R2    IOSTANDARD SSTL135 } [get_ports { clk }]; # Port R2, DDR3_CLK100
-create_clock -add -name sys_clk_pin -period 10.000 -waveform {0 5.000}  [get_ports { clk }]; # DDR3_CLK100 pin
+set_property -dict { PACKAGE_PIN R2    IOSTANDARD SSTL135 } [get_ports { clk }]; #IO_L12P_T1_MRCC_34 Sch=ddr3_clk[200]
+create_clock -add -name sys_clk_pin -period 10.000 -waveform {0 5.000}  [get_ports { clk }];
+
+#set_property -dict { PACKAGE_PIN R2    IOSTANDARD SSTL135 } [get_ports { clk }]; # Port R2, DDR3_CLK100
+#create_clock -add -name sys_clk -period 10.000 -waveform {0 5.000}  [get_ports { clk }]; # DDR3_CLK100 pin
 # binds to five_cycle_cpu.led_out output
 set_property -dict { PACKAGE_PIN E18   IOSTANDARD LVCMOS33 } [get_ports { led_out }]; #IO_L16N_T2_A27_15 Sch=led[2]
 # C18 is a reset button, bind it to five_cycle_cpu.rst input

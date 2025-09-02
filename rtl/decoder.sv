@@ -66,10 +66,11 @@ module decoder #(
     assign u_type = load_upper || load_upper_pc;
     assign j_type = immediate_jump;
     
-    logic override_immediate_arith; // funct_7 exists, special case for immediate arithmetic
-    assign override_immediate_arith = funct_3 == 3'h1 || funct_3 == 3'h5;
+    // special case for slli, srli, srai instructions
+    logic shift_override; // funct_7 defined implicitly as imm[11:5] (default location)
+    assign shift_override = funct_3 == 3'h1 || funct_3 == 3'h5;
     
-    assign funct_7[31:25] = (immediate_arith && !override_immediate_arith) ? '0 : instruction_data[31:25];
+    assign funct_7[31:25] = (immediate_arith && !shift_override) ? '0 : instruction_data[31:25];
     assign funct_3[14:12] = instruction_data[14:12];
     
     assign funct_7_valid = r_type || immediate_arith;
@@ -93,9 +94,15 @@ module decoder #(
             immediate_valid = '0;
             opcode_legal = '1;
         end else if (i_type) begin
-            immediate_data = (immediate_arith && override_immediate_arith) ?
-                $unsigned(instruction_data[24:20]) : // overrided for immediate shifts
-                $signed(instruction_data[31:20]); // normal i_type logic
+            if (immediate_arith && shift_override) begin
+                // only imm[4:0] is used,
+                // the other [11:5] is treated as funct_7
+                immediate_data[4:0] = instruction_data[24:20];
+                immediate_data[IMMEDIATE_WIDTH - 1:5] = '0;
+            end else begin
+                immediate_data = $signed(instruction_data[31:20]); // normal i_type logic
+            end
+
             immediate_valid = '1;
             opcode_legal = '1;
         end else if (s_type) begin

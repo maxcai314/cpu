@@ -65,20 +65,18 @@ module five_cycle_cpu (
     logic [31:0] memory_fetched_data;
     logic memory_fetch_done;
 
-    logic [2:0] memory_bytes_to_write;
     logic [31:0] memory_write_addr;
-    logic [31:0] memory_write_data;
+    logic [7:0] memory_write_data;
     logic memory_write_activate;
     logic memory_write_done;
 
-    memory memory (
+    bytewise_memory memory (
         .clk ( clk ),
         .rst ( rst ),
         
         .instruction_addr ( ram_instruction_fetch_addr ),
         .fetch_addr ( memory_fetch_addr ),
         
-        .bytes_to_write ( memory_bytes_to_write ),
         .write_addr ( memory_write_addr ),
         .write_data ( memory_write_data ),
         .write_activate ( memory_write_activate ),
@@ -347,7 +345,6 @@ module five_cycle_cpu (
         .write_addr ( memory_write_addr ),
         .write_data ( memory_write_data ),
         .write_activate ( memory_write_activate ),
-        .bytes_to_write ( memory_bytes_to_write ),
         .write_done ( memory_write_done ),
 
         .fetch_addr ( memory_fetch_addr ),
@@ -416,6 +413,7 @@ module five_cycle_cpu (
         .write_register ( write_register ),
         .write_data ( write_register_data ),
         .write_activate ( write_register_activate ),
+        .write_done ( register_write_done ),
 
         .program_count_in ( memory_program_count ),
         .program_count_valid_in ( memory_program_count_valid ),
@@ -479,9 +477,7 @@ module five_cycle_cpu (
 
     always_ff @(posedge clk) if (rst) begin
         queued_program_count <= 32'h0000_0000;
-    end
-
-    always_ff @(posedge clk) if (!rst) begin
+    end else begin
         if (start_program_count) begin
             queued_program_count <= program_count + 32'h0000_0004;
         end

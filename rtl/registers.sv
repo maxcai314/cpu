@@ -21,21 +21,17 @@ module registers #(
     output logic [DATA_WIDTH - 1:0] result_2
 );
 
-    logic [DATA_WIDTH - 1:0] data [NUM_REGISTERS];
+    logic [DATA_WIDTH - 1:0] data [NUM_REGISTERS - 1:0];
     
-    assign data[0] = '0; // zero register
-    
-    assign result_1 = data[read_register_1];
-    assign result_2 = data[read_register_2];
+    assign result_1 = read_register_1 == 0 ? '0 : data[read_register_1];
+    assign result_2 = read_register_2 == 0 ? '0 : data[read_register_2];
     
     assign write_done = write_activate; // fairly simple, there's not many conditions
     
     always_ff @(posedge clk) if (rst) begin
         for (int i = 1; i < NUM_REGISTERS; i++)
             data[i] <= DATA_WIDTH'(0); // reset registers
-    end
-    
-    always_ff @(posedge clk) if (!rst) begin
+    end else begin
         if (write_done)
             if (write_register != 0)
                 data[write_register] <= write_data;
